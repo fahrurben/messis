@@ -4,7 +4,7 @@ class Company(models.Model):
     name = models.CharField(max_length=100)
     subdomain = models.CharField(max_length=100)
     timezone = models.CharField(max_length=50, default='UTC')
-    users = models.ManyToManyField('messis.CustomUser', through='messis.UserRole', through_fields=('company', 'user'))
+    users = models.ManyToManyField('messis.CustomUser', through='messis.UserRole', through_fields=('company', 'user'), related_name='companies')
 
     class Status(models.TextChoices):
         PAYING = 'PA', 'Paying'

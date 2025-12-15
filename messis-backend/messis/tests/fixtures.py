@@ -1,7 +1,7 @@
 import pytest
 
 from datetime import date
-from messis.models import Company, CustomUser, UserProfile, Project
+from messis.models import Company, CustomUser, UserProfile, Project, UserRole
 
 
 @pytest.fixture
@@ -21,8 +21,9 @@ def user_A(db, company_A):
     user = CustomUser.objects.create_user('test@test.com', 'test@test.com', 'secret123')
     user.first_name = 'John'
     user.last_name = 'Doe'
-    user.company_set.add(company_A)
     user.save()
+
+    user_role = UserRole.objects.create(company=company_A, user=user, role=UserRole.Role.OWNER)
 
     profile = UserProfile()
     profile.user = user

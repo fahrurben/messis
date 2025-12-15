@@ -1,4 +1,4 @@
-from messis.models import Company, CustomUser, UserProfile, Project, UserRole, Role, Task, ProjectTeam
+from messis.models import Company, CustomUser, UserProfile, Project, UserRole, Task, ProjectTeam
 from datetime import date
 
 from fixtures import company_A, user_A, project_A
@@ -31,13 +31,13 @@ def test_user_model(db, company_A):
     profile.profile_photo = 'abc.jpg'
     profile.save()
 
-    user_role = UserRole.objects.create(company=company_A, user=user, role=Role.OWNER)
+    user_role = UserRole.objects.create(company=company_A, user=user, role=UserRole.Role.OWNER)
 
     assert user.id is not None
     assert user.username == 'test@test.com'
     assert user.email == 'test@test.com'
     assert user.is_active == True
-    assert user.company_set.all()[0] == company_A
+    assert user.companies.all()[0] == company_A
 
     assert profile.user_id == user.id
     assert profile.firstname == 'John'
