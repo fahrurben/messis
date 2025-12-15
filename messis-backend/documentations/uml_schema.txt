@@ -1,0 +1,64 @@
+@startuml
+class Company {
+ -id: int
+ -name: string
+ -time_zone: string
+ -status: ENUM(TRIAL, PAYING, CANCELLED)
+ -created_at: DateTime
+}
+
+class CustomUser {
+ -id: int
+ -email: string
+ -password: string
+ -firstname: string
+ -lastname: string
+ -company: Company
+ -role: Enum(OWNER, USER)
+}
+
+
+class UserProfile {
+ -id: int
+ -firstname: string
+ -lastname: string
+ -title: string
+ -capacity: float
+ -bill_rate: float
+ -cost_rate: float
+ -profile_photo: string
+}
+
+CustomUser *-- UserProfile
+
+class Project {
+ -id: int
+ -name: string
+ -code: string
+ -start_date: Date
+ -end_date: Date
+ -description: string
+ -billable: bool
+ -task_counter: int
+ -teams: List<CustomUser>
+ -company: Company
+ -is_active: bool
+}
+
+
+class Task {
+ -id: int
+ -name: string
+ -project: Project
+ -is_billable: bool
+}
+
+class ProjectTeam {
+ -id: int
+ -user: Custom
+ -project: Project
+ -is_admin: bool
+}
+
+Project *-- Task
+@enduml
