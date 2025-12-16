@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+from datetime import timedelta
 from dotenv import load_dotenv
 import os
 
@@ -135,3 +136,17 @@ AUTH_USER_MODEL = 'messis.CustomUser'
 CORS_ORIGIN_ALLOW_ALL = True
 
 TIME_ZONE = 'UTC'
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 20,
+    'COERCE_DECIMAL_TO_STRING': False,
+}
+
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(hours=int(os.getenv("JWT_MAX_LIFETIME", 1))),
+    "REFRESH_TOKEN_LIFETIME": timedelta(hours=int(os.getenv("JWT_MAX_LIFETIME", 1))),
+}

@@ -1,5 +1,4 @@
 from django.db import models
-
 from django.apps import apps
 
 
@@ -16,3 +15,4 @@ class CustomUserManager(models.Manager):
             .filter(companies__in=[company], userrole__role=UserRole.Role.OWNER)
             .first()
         )
+

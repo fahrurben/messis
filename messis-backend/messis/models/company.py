@@ -1,8 +1,13 @@
 from django.db import models
 
+from messis.models import CompanyManager
+
+
 class Company(models.Model):
-    name = models.CharField(max_length=100)
-    subdomain = models.CharField(max_length=100)
+    objects = models.Manager()
+    custom_manager = CompanyManager()
+    name = models.CharField(max_length=100, unique=True)
+    subdomain = models.CharField(max_length=100, unique=True)
     timezone = models.CharField(max_length=50, default='UTC')
     users = models.ManyToManyField('messis.CustomUser', through='messis.UserRole', through_fields=('company', 'user'), related_name='companies')
 

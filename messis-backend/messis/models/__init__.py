@@ -1,5 +1,6 @@
 from .custom_user_manager import CustomUserManager
 from .custom_user import CustomUser
+from .company_manager import CompanyManager
 from .company import Company
 from .user_role import UserRole
 from .user_profile import UserProfile
