@@ -1,5 +1,8 @@
 from django.urls import reverse
 from rest_framework_simplejwt import authentication
+from rest_framework_simplejwt.tokens import AccessToken
+
+from django.http import HttpResponseForbidden
 
 from messis.models import Company
 
@@ -10,8 +13,7 @@ class CompanyCheckMiddleware:
         self.get_response = get_response
         self.exempt_urls = [
             reverse('register'),
-            reverse('token_obtain_pair'),
-            reverse('token_refresh'),
+            reverse('authenticate'),
         ]
 
     def __call__(self, request):
@@ -19,9 +21,12 @@ class CompanyCheckMiddleware:
             return self.get_response(request)
 
         user, token = authentication.JWTAuthentication().authenticate(request)
-        company_id = int(token.claims.get('company_id'))
 
-        company = Company.objects.get(pk=company_id)
+        company = Company.objects.get(pk=token.payload.get('company_id'))
         request.company = company
+        request.user = user
+
+        if not request.user.is_authenticated:
+            return HttpResponseForbidden("You are not authorized to access this resource.")
 
         return self.get_response(request)

@@ -2,6 +2,7 @@
 
 from django.db import migrations
 from django.contrib.contenttypes.models import ContentType
+from django.contrib.auth.management import create_permissions
 
 from django.apps import apps
 
@@ -9,6 +10,10 @@ from messis.models import UserRole
 
 
 def create_group_and_permissions(apps, schema_editor):
+    for app_config in apps.get_app_configs():
+        app_config.models_module = True
+        create_permissions(app_config, verbosity=0)
+
     Group = apps.get_model('auth', 'Group')
     Permission = apps.get_model('auth', 'Permission')
 

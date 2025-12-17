@@ -17,11 +17,17 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
-from messis.views import RegisterView
+from messis.views import RegisterView, UserProfileView
 from messis.views.auth_view import authenticate
+from rest_framework.routers import SimpleRouter
+
+router = SimpleRouter(trailing_slash=False)
+router.register(r'user-profiles', UserProfileView, basename='userprofile')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/register', RegisterView.as_view(), name='register'),
     path('api/authenticate', authenticate, name='authenticate'),
+
+    path('api/', include(router.urls)),
 ]

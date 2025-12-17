@@ -1,5 +1,6 @@
 from messis.models import Company, CustomUser, UserProfile, UserRole
 from django.contrib.auth.models import Group
+from django.utils.text import slugify
 
 
 class CompanyService:
@@ -9,6 +10,7 @@ class CompanyService:
         company.name = validated_data.get('company_name')
         company.timezone = validated_data.get('timezone')
         company.status = Company.Status.TRIAL
+        company.subdomain = slugify(company.name)
         company.save()
 
         user = CustomUser.objects.create_user(

@@ -2,6 +2,7 @@ import pytest
 
 from datetime import date
 from messis.models import Company, CustomUser, UserProfile, Project, UserRole
+from django.contrib.auth.models import Group
 
 
 @pytest.fixture
@@ -23,7 +24,9 @@ def user_A(db, company_A):
     user.last_name = 'Doe'
     user.save()
 
-    user_role = UserRole.objects.create(company=company_A, user=user, role=UserRole.Role.OWNER)
+    UserRole.objects.create(company=company_A, user=user, role=UserRole.Role.OWNER)
+    company_owner_group = Group.objects.get(name=UserRole.Role.OWNER)
+    user.groups.add(company_owner_group)
 
     profile = UserProfile()
     profile.user = user
@@ -37,6 +40,7 @@ def user_A(db, company_A):
     profile.save()
 
     return user
+
 
 @pytest.fixture
 def project_A(db, company_A):
