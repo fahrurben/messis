@@ -1,0 +1,30 @@
+from django.contrib.auth.hashers import check_password
+from rest_framework_simplejwt.tokens import RefreshToken
+
+from messis.models import CustomUser, Company
+
+
+class AuthService:
+
+    @staticmethod
+    def authenticate(email, password, subdomain):
+        user = CustomUser.objects.filter(email=email).first()
+
+        if user is None:
+            raise Exception('Wrong email or password')
+
+        if not check_password(password, user.password):
+            raise Exception('Wrong email or password')
+
+        company = Company.objects.filter(subdomain=subdomain).first()
+
+        if company is None:
+            raise Exception('Wrong subdomain entered')
+
+        refresh = RefreshToken.for_user(user)
+        refresh['company_id'] = company.id
+
+        return {
+            'refresh': str(refresh),
+            'access': str(refresh.access_token),
+        }

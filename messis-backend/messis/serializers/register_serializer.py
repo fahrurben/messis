@@ -7,6 +7,7 @@ from messis.services import CompanyService
 class RegisterSerializer(serializers.Serializer):
     company_name = serializers.CharField(max_length=50)
     email = serializers.EmailField()
+    password = serializers.CharField(max_length=50)
     firstname = serializers.CharField(max_length=255)
     lastname = serializers.CharField(max_length=255)
     timezone = serializers.CharField(max_length=50)

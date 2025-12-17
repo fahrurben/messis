@@ -18,8 +18,10 @@ from django.contrib import admin
 from django.urls import path, include
 
 from messis.views import RegisterView
+from messis.views.auth_view import authenticate
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/register', RegisterView.as_view(), name='register'),
+    path('api/authenticate', authenticate, name='authenticate'),
 ]
