@@ -57,6 +57,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'messis.middlewares.CompanyCheckMiddleware',
 ]
 
 ROOT_URLCONF = 'messisconfig.urls'
