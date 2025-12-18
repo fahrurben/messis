@@ -1,0 +1,17 @@
+from rest_framework import viewsets
+from rest_framework.permissions import DjangoModelPermissions
+
+from messis.serializers import ProjectSerializer
+from messis.models import Project
+
+
+class ProjectView(viewsets.ModelViewSet):
+    serializer_class = ProjectSerializer
+    queryset = Project.objects.all()
+    permission_classes = [DjangoModelPermissions]
+
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context.update({'user': self.request.user, 'company': self.request.company})
+        return context
+
