@@ -16,8 +16,14 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.conf.urls.static import static
+from django.conf import settings
 
-from messis.views import RegisterView, UserProfileView
+
+from messis.views import RegisterView
+from messis.views import UserProfileView
+from messis.views import ImageUploadView
+
 from messis.views.auth_view import authenticate
 from rest_framework.routers import SimpleRouter
 
@@ -28,6 +34,9 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/register', RegisterView.as_view(), name='register'),
     path('api/authenticate', authenticate, name='authenticate'),
+    path('api/media_upload', ImageUploadView.as_view(), name='media_upload'),
 
     path('api/', include(router.urls)),
 ]
+
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

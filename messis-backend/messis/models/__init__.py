@@ -7,4 +7,4 @@ from .user_profile import UserProfile
 from .project import Project
 from .project_team import ProjectTeam
 from .task import Task
-
+from .upload_image_model import UploadImageModel
