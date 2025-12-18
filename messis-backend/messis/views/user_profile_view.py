@@ -24,7 +24,7 @@ class UserProfileView(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, viewse
         user_id = int(self.kwargs[self.lookup_url_kwarg])
 
         # Filter the base queryset using the custom criteria
-        queryset = self.filter_queryset(self.get_queryset())
+        queryset = self.get_queryset()
         queryset.filter(user__id=user_id)
         obj = get_object_or_404(queryset)
 

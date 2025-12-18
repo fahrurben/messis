@@ -3,7 +3,7 @@ import pytest
 from rest_framework.test import APIClient
 from rest_framework_simplejwt.tokens import RefreshToken
 from datetime import date
-from messis.models import Company, CustomUser, UserProfile, Project, UserRole
+from messis.models import Company, CustomUser, UserProfile, Project, UserRole, Task, ProjectTeam
 from django.contrib.auth.models import Group
 
 
@@ -66,7 +66,29 @@ def user_B(db, company_A):
     return user
 
 @pytest.fixture
-def project_A(db, company_A):
+def user_C(db, company_A):
+    user = CustomUser.objects.create_user('user2@test.com', 'user2@test.com', 'secret123')
+    user.first_name = 'Danny'
+    user.last_name = 'Darko'
+    user.save()
+
+    UserRole.objects.create(company=company_A, user=user, role=UserRole.Role.USER)
+
+    profile = UserProfile()
+    profile.user = user
+    profile.firstname = 'Danny'
+    profile.lastname = 'Darko'
+    profile.title = 'Programmer'
+    profile.capacity = 40.00
+    profile.bill_rate = 10.00
+    profile.cost_rate = 10.00
+    profile.profile_photo = 'abc.jpg'
+    profile.save()
+
+    return user
+
+@pytest.fixture
+def project_A(db, company_A, user_B):
     project = Project()
     project.company = company_A
     project.name = 'Project Acme'
@@ -77,6 +99,10 @@ def project_A(db, company_A):
     project.is_billable = True
     project.is_active = True
     project.save()
+
+    Task.objects.create(project=project, name='Design', is_billable=True)
+
+    ProjectTeam.objects.create(project=project, team=user_B, is_admin=False)
 
     return project
 

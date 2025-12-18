@@ -15,3 +15,8 @@ class ProjectView(viewsets.ModelViewSet):
         context.update({'user': self.request.user, 'company': self.request.company})
         return context
 
+    def get_queryset(self):
+        return Project.objects.filter(company=self.request.company)
+
+    # Todo: Implement get object if user can access other company projects
+    # def get_object(self):
