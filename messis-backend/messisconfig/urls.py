@@ -25,6 +25,7 @@ from messis.views import UserProfileView
 from messis.views import ImageUploadView
 from messis.views import ProjectView
 from messis.views import InviteView
+from messis.views import TeamView
 
 from messis.views.auth_view import authenticate
 from rest_framework.routers import SimpleRouter
@@ -32,6 +33,7 @@ from rest_framework.routers import SimpleRouter
 router = SimpleRouter(trailing_slash=False)
 router.register(r'user-profiles', UserProfileView, basename='userprofile')
 router.register(r'projects', ProjectView, basename='project')
+router.register(r'teams', TeamView, basename='team')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
