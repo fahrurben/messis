@@ -2,9 +2,10 @@ from rest_framework.views import APIView, Response, status
 
 from messis.serializers.register_serializer import RegisterSerializer
 from messis.serializers.user_serializer import UserSerializer
-
+from rest_framework.permissions import IsAuthenticated
 
 class RegisterView(APIView):
+    permission_classes = [IsAuthenticated]
 
     def post(self, request):
         serializer = RegisterSerializer(data=request.data)

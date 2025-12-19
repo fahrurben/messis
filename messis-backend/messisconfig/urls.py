@@ -22,8 +22,9 @@ from django.conf import settings
 
 from messis.views import RegisterView
 from messis.views import UserProfileView
-from messis.views import ProjectView
 from messis.views import ImageUploadView
+from messis.views import ProjectView
+from messis.views import InviteView
 
 from messis.views.auth_view import authenticate
 from rest_framework.routers import SimpleRouter
@@ -37,6 +38,7 @@ urlpatterns = [
     path('api/register', RegisterView.as_view(), name='register'),
     path('api/authenticate', authenticate, name='authenticate'),
     path('api/media_upload', ImageUploadView.as_view(), name='media_upload'),
+    path('api/invite', InviteView.as_view(), name='invite'),
 
     path('api/', include(router.urls)),
 ]
