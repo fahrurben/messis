@@ -66,3 +66,12 @@ def test_time_entry_get(api_client, company_A, user_A, project_A, time_entry_A):
     assert data['task_id'] == project_A.tasks.first().id
     assert data['summary'] == 'Lorem Ipsum'
     assert data['total_seconds'] == 600
+
+@pytest.mark.django_db
+def test_time_entry_get_by_entry_date(api_client, company_A, user_A, project_A, time_entry_A):
+    url = reverse('timeentry-get-entry-by-date')
+
+    response = api_client.get(url, {'date': '2025-01-01'})
+    data = response.data['results']
+    assert response.status_code == status.HTTP_200_OK
+    assert len(data) == 1

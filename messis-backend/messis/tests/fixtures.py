@@ -114,7 +114,7 @@ def time_entry_A(db, company_A, user_A, user_B, project_A):
     time_entry.team = user_A
     time_entry.summary = 'Lorem Ipsum'
     time_entry.total_seconds = 600
-    time_entry.entry_at = date.today()
+    time_entry.entry_at = date(2025, 1, 1)
     time_entry.save()
 
     return time_entry
