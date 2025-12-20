@@ -4,3 +4,4 @@ from .user_serializer import UserSerializer
 from .upload_image_serializer import UploadImageSerializer
 from .project_serializer import ProjectSerializer
 from .invite_serializer import InviteSerializer
+from .time_entry_serializer import TimeEntrySerializer

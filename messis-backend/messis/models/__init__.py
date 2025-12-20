@@ -8,3 +8,4 @@ from .project import Project
 from .project_team import ProjectTeam
 from .task import Task
 from .upload_image_model import UploadImageModel
+from .time_entry import TimeEntry

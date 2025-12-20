@@ -5,3 +5,4 @@ from .image_upload_view import ImageUploadView
 from .project_view import ProjectView
 from .invite_view import InviteView
 from .team_view import TeamView
+from .time_entry_view import TimeEntryView

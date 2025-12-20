@@ -3,7 +3,7 @@ import pytest
 from rest_framework.test import APIClient
 from rest_framework_simplejwt.tokens import RefreshToken
 from datetime import date
-from messis.models import Company, CustomUser, UserProfile, Project, UserRole, Task, ProjectTeam
+from messis.models import Company, CustomUser, UserProfile, Project, UserRole, Task, ProjectTeam, TimeEntry
 from django.contrib.auth.models import Group
 
 
@@ -106,6 +106,18 @@ def project_A(db, company_A, user_B):
 
     return project
 
+@pytest.fixture
+def time_entry_A(db, company_A, user_A, user_B, project_A):
+    time_entry = TimeEntry()
+    time_entry.project = project_A
+    time_entry.task = project_A.tasks.first()
+    time_entry.team = user_A
+    time_entry.summary = 'Lorem Ipsum'
+    time_entry.total_seconds = 600
+    time_entry.entry_at = date.today()
+    time_entry.save()
+
+    return time_entry
 
 @pytest.fixture
 def api_client(user_A, company_A):
