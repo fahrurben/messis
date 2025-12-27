@@ -1,4 +1,8 @@
-from rest_framework.views import APIView, Response, status
+from django.http import HttpResponse
+from rest_framework import status
+from rest_framework.response import Response
+from rest_framework.request import Request
+from rest_framework.views import APIView
 
 from rest_framework.permissions import IsAuthenticated
 from messis.permissions import CompanyOwnerPermission
@@ -8,7 +12,7 @@ from messis.serializers import InviteSerializer, UserSerializer
 class InviteView(APIView):
     permission_classes = [IsAuthenticated, CompanyOwnerPermission]
 
-    def post(self, request):
+    def post(self, request: Request) -> HttpResponse:
         user = request.user
         company = request.company
         serializer = InviteSerializer(data=request.data, context={'user': user, 'company': company})

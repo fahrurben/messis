@@ -1,10 +1,12 @@
+from typing import Any, Dict
+
 from rest_framework import serializers
 
 from messis.models import Company, CustomUser, UserProfile, UserRole
 from messis.services import CompanyService
 
 
-class RegisterSerializer(serializers.Serializer):
+class RegisterSerializer(serializers.Serializer[Any]):
     company_name = serializers.CharField(max_length=50)
     email = serializers.EmailField()
     password = serializers.CharField(max_length=50)
@@ -24,7 +26,7 @@ class RegisterSerializer(serializers.Serializer):
             raise serializers.ValidationError("Email already registered")
         return value
 
-    def create(self, validated_data):
+    def create(self, validated_data: Dict[Any, Any]) -> CustomUser:
         company_service = CompanyService()
         user = company_service.register(validated_data)
         return user

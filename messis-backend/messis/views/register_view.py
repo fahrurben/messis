@@ -1,4 +1,8 @@
-from rest_framework.views import APIView, Response, status
+from django.http import HttpResponse
+from rest_framework.views import APIView
+from rest_framework import status
+from rest_framework.response import Response
+from rest_framework.request import Request
 
 from messis.serializers.register_serializer import RegisterSerializer
 from messis.serializers.user_serializer import UserSerializer
@@ -7,7 +11,7 @@ from rest_framework.permissions import IsAuthenticated
 class RegisterView(APIView):
     permission_classes = [IsAuthenticated]
 
-    def post(self, request):
+    def post(self, request: Request) -> HttpResponse:
         serializer = RegisterSerializer(data=request.data)
         if serializer.is_valid():
             user = serializer.create(serializer.validated_data)

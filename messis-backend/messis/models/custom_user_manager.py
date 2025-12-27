@@ -1,8 +1,10 @@
 from django.db import models
 from django.apps import apps
 
+from typing import Any
 
-class CustomUserManager(models.Manager):
+
+class CustomUserManager(models.Manager[Any]):
 
     def get_users_of_company(self, company):
         return self.get_queryset().select_related('userprofile').filter(companies__in=[company]).order_by(
@@ -15,4 +17,3 @@ class CustomUserManager(models.Manager):
             .filter(companies__in=[company], userrole__role=UserRole.Role.OWNER)
             .first()
         )
-

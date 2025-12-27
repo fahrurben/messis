@@ -1,7 +1,9 @@
+from typing import Any
+
 from rest_framework import serializers
 
 
-class LoginSerializer(serializers.Serializer):
+class LoginSerializer(serializers.Serializer[Any]):
     email = serializers.EmailField()
     password = serializers.CharField(max_length=50)
     subdomain = serializers.CharField(max_length=100)

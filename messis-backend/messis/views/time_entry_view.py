@@ -1,7 +1,7 @@
 from rest_framework import mixins, viewsets
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import action
-from rest_framework.views import status
+from rest_framework import status
 
 
 from messis.models import TimeEntry
@@ -12,7 +12,7 @@ from datetime import date
 from django.utils.dateparse import parse_date
 from rest_framework.response import Response
 
-class TimeEntryView(viewsets.ModelViewSet):
+class TimeEntryView(viewsets.ModelViewSet[TimeEntry]):
     serializer_class = TimeEntrySerializer
     queryset = TimeEntry.objects.all()
     permission_classes = [IsAuthenticated, OwnEntryPermission]

@@ -1,12 +1,16 @@
 from rest_framework.decorators import api_view
-from rest_framework.views import Response, status
+from django.http import HttpResponse
+from rest_framework.response import Response
+from rest_framework.request import Request
 
+from rest_framework.views import APIView
+from rest_framework import status
 from messis.serializers.login_serializer import LoginSerializer
 from messis.services.auth_service import AuthService
 
 
 @api_view(['POST'])
-def authenticate(request):
+def authenticate(request: Request) -> HttpResponse:
     serializer = LoginSerializer(data=request.data)
     if serializer.is_valid():
         data = serializer.validated_data

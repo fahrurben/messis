@@ -5,7 +5,7 @@ from messis.serializers import ProjectSerializer
 from messis.models import Project
 
 
-class ProjectView(viewsets.ModelViewSet):
+class ProjectView(viewsets.ModelViewSet[Project]):
     serializer_class = ProjectSerializer
     queryset = Project.objects.all()
     permission_classes = [DjangoModelPermissions]

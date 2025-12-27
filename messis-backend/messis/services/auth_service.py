@@ -1,3 +1,5 @@
+from typing import Dict
+
 from django.contrib.auth.hashers import check_password
 from rest_framework_simplejwt.tokens import RefreshToken
 
@@ -7,7 +9,7 @@ from messis.models import CustomUser, Company
 class AuthService:
 
     @staticmethod
-    def authenticate(email, password, subdomain):
+    def authenticate(email: str, password: str, subdomain: str) -> Dict[str, str]:
         user = CustomUser.objects.filter(email=email).first()
 
         if user is None:

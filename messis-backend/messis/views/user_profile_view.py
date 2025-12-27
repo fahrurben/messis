@@ -6,7 +6,7 @@ from messis.models import UserProfile
 from messis.serializers import UserProfileSerializer
 
 
-class UserProfileView(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, viewsets.GenericViewSet):
+class UserProfileView(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, viewsets.GenericViewSet[UserProfile]):
     serializer_class = UserProfileSerializer
     queryset = UserProfile.objects.all()
     lookup_field = 'user__id'

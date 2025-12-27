@@ -1,15 +1,16 @@
 from rest_framework import serializers
 
 from messis.models import TimeEntry, Project, Task
+from typing import Any
 
 
-class TimeEntrySerializer(serializers.ModelSerializer):
+class TimeEntrySerializer(serializers.ModelSerializer[TimeEntry]):
     project_id = serializers.IntegerField()
-    project = serializers.PrimaryKeyRelatedField(read_only=True)
+    project: Any = serializers.PrimaryKeyRelatedField(read_only=True)
     task_id = serializers.IntegerField()
-    task = serializers.PrimaryKeyRelatedField(read_only=True)
+    task: Any = serializers.PrimaryKeyRelatedField(read_only=True)
     team_id = serializers.IntegerField(read_only=True)
-    team = serializers.PrimaryKeyRelatedField(read_only=True)
+    team: Any = serializers.PrimaryKeyRelatedField(read_only=True)
 
     class Meta:
         model = TimeEntry

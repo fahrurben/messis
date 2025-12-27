@@ -2,7 +2,7 @@ from rest_framework import serializers
 from messis.models import Project, ProjectTeam, Task
 
 
-class TaskSerializer(serializers.ModelSerializer):
+class TaskSerializer(serializers.ModelSerializer[Task]):
     id = serializers.IntegerField(required=False)
     name = serializers.CharField(max_length=255)
     is_billable = serializers.BooleanField()
@@ -12,7 +12,7 @@ class TaskSerializer(serializers.ModelSerializer):
         fields = ('id', 'name', 'is_billable')
 
 
-class ProjectTeamSerializer(serializers.ModelSerializer):
+class ProjectTeamSerializer(serializers.ModelSerializer[ProjectTeam]):
     id = serializers.IntegerField(required=False)
     project_id = serializers.IntegerField(required=False)
     team_id = serializers.IntegerField()
@@ -22,7 +22,7 @@ class ProjectTeamSerializer(serializers.ModelSerializer):
         fields = ('id', 'project_id', 'team_id', 'is_admin')
 
 
-class ProjectSerializer(serializers.ModelSerializer):
+class ProjectSerializer(serializers.ModelSerializer[Project]):
     id = serializers.IntegerField(read_only=True)
     tasks = TaskSerializer(many=True, required=False)
     projectteam_set = ProjectTeamSerializer(many=True, required=False)
@@ -78,7 +78,7 @@ class ProjectSerializer(serializers.ModelSerializer):
 
         # Update tasks
         existing_task_ids = instance.tasks.all().values_list('id', flat=True)
-        update_task_ids = [task.get('id') for task in tasks if task.get('id') is not None]
+        update_task_ids = [task.get('id') for task in (tasks or []) if task.get('id') is not None]
         deleted_task_ids = set(existing_task_ids).difference(set(update_task_ids))
 
         if tasks:
@@ -93,7 +93,7 @@ class ProjectSerializer(serializers.ModelSerializer):
 
         # Update project teams
         existing_project_team_ids = instance.projectteam_set.all().values_list('id', flat=True)
-        update_project_team_ids = [project_team.get('id') for project_team in projectteam_set if
+        update_project_team_ids = [project_team.get('id') for project_team in (projectteam_set or []) if
                                    project_team.get('id') is not None]
         deleted_project_team_ids = set(existing_project_team_ids).difference(set(update_project_team_ids))
 

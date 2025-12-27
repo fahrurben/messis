@@ -1,10 +1,13 @@
+from typing import Any, Dict
+
 from django.contrib.auth.models import Group
 from rest_framework import serializers
 
 from messis.models import CustomUser, UserProfile, UserRole
 import uuid
 
-class InviteSerializer(serializers.Serializer):
+
+class InviteSerializer(serializers.Serializer[Any]):
     email = serializers.EmailField()
     password = serializers.CharField(max_length=50)
     firstname = serializers.CharField(max_length=255)
@@ -16,15 +19,15 @@ class InviteSerializer(serializers.Serializer):
             raise serializers.ValidationError("Email already registered")
         return value
 
-    def create(self, validated_data):
+    def create(self, validated_data: Dict[str, str]) -> CustomUser:
         company = self.context['company']
 
         invite_code = str(uuid.uuid4())
 
         user = CustomUser.objects.create_user(
-            validated_data.get('email'),
-            validated_data.get('email'),
-            validated_data.get('password'),
+            str(validated_data.get('email')),
+            str(validated_data.get('email')),
+            str(validated_data.get('password')),
             invite_code=invite_code,
             is_active=True
         )
@@ -35,7 +38,7 @@ class InviteSerializer(serializers.Serializer):
 
         profile = UserProfile()
         profile.user = user
-        profile.firstname = validated_data.get('firstname')
-        profile.lastname = validated_data.get('lastname')
+        profile.firstname = str(validated_data.get('firstname'))
+        profile.lastname = str(validated_data.get('lastname'))
         profile.save()
         return user

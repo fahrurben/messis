@@ -4,7 +4,7 @@ from messis.models import CustomUser
 from messis.serializers import UserProfileSerializer
 
 
-class UserSerializer(serializers.ModelSerializer):
+class UserSerializer(serializers.ModelSerializer[CustomUser]):
     password = serializers.CharField(min_length=6, max_length=100, write_only=True)
     userprofile = UserProfileSerializer()
 

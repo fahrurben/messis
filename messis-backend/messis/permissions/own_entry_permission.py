@@ -13,7 +13,7 @@ class OwnEntryPermission(permissions.BasePermission):
         """ Check if model is allow to access by user """
         user_role = UserRole.objects.filter(user=request.user, company=request.company).first()
 
-        if user_role is not None and user_role == UserRole.Role.OWNER:
+        if user_role is not None and user_role.role == UserRole.Role.OWNER:
             return True
 
         if request.user.id == obj.team.id:

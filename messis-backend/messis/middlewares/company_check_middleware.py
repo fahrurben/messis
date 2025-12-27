@@ -22,7 +22,7 @@ class CompanyCheckMiddleware:
 
         user, token = authentication.JWTAuthentication().authenticate(request)
 
-        company = Company.objects.get(pk=token.payload.get('company_id'))
+        company = Company.objects.get(pk=int(token.payload.get('company_id')))
         request.company = company
         request.user = user
 
