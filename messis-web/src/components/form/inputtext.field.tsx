@@ -1,4 +1,4 @@
-import InputText from "./inputtext.element.tsx";
+import type {ReactNode} from "react";
 
 const InputTextField = ({
   label,
@@ -6,6 +6,12 @@ const InputTextField = ({
   required,
   error,
   children,
+}: {
+  label: string,
+  name: string,
+  required: boolean,
+  error?: any,
+  children: ReactNode,
 }) => {
   return (
     <div>
