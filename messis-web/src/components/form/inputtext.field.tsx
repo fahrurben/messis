@@ -1,4 +1,5 @@
-import type {ReactNode} from "react";
+import type { ReactNode } from "react"
+import type { FieldError } from "react-hook-form"
 
 const InputTextField = ({
   label,
@@ -7,15 +8,16 @@ const InputTextField = ({
   error,
   children,
 }: {
-  label: string,
-  name: string,
-  required: boolean,
-  error?: any,
-  children: ReactNode,
+  label: string
+  name: string
+  required: boolean
+  error?: FieldError
+  children: ReactNode
 }) => {
   return (
     <div>
-      <label id={name}>{label}
+      <label id={name}>
+        {label}
         {required && <span className={"text-red-500"}>*</span>}
       </label>
       {children}

@@ -1,21 +1,34 @@
-import { useForm } from "react-hook-form"
+import { type SubmitHandler, useForm } from "react-hook-form"
 import InputText from "../../components/form/inputtext.element"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
 import InputTextField from "../../components/form/inputtext.field"
+import { useLogin } from "./use-login.hook.ts"
+import { actions as authActions } from "../../stores/auth.store.ts"
+import type { LoginResponse } from "../../commons/types.ts"
+import { useNavigate } from "react-router"
 
 const formSchema = z.object({
   email: z.string().email(),
   password: z.string().min(6),
+  subdomain: z.string().min(3),
 })
 
+type FormValues = {
+  email: string
+  password: string
+  subdomain: string
+}
+
 const Login = () => {
+  const navigate = useNavigate()
+
   const {
-    control,
     register,
     formState: { errors },
+    setError,
     handleSubmit,
-  } = useForm({
+  } = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       email: "",
@@ -23,8 +36,21 @@ const Login = () => {
     },
   })
 
-  const onSubmit = (data) => {
-    console.log(data)
+  const loginMutation = useLogin({
+    onError: () => {
+      setError("email", {
+        type: "server",
+        message: "Wrong email or password",
+      })
+    },
+    onSuccess: (data: LoginResponse) => {
+      authActions.setToken(data.access)
+      navigate("/")
+    },
+  })
+
+  const onSubmit: SubmitHandler<FormValues> = (data) => {
+    loginMutation.execute(data)
   }
 
   return (
@@ -61,6 +87,21 @@ const Login = () => {
                 placeholder={"password"}
                 register={register}
                 error={errors?.password}
+                required
+              />
+            </InputTextField>
+            <InputTextField
+              label={"Subdomain"}
+              name={"subdomain"}
+              error={errors?.subdomain}
+              required={true}
+            >
+              <InputText
+                name={"subdomain"}
+                type={"subdomain"}
+                placeholder={"subdomain"}
+                register={register}
+                error={errors?.subdomain}
                 required
               />
             </InputTextField>
