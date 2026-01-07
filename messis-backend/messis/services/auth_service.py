@@ -25,6 +25,7 @@ class AuthService:
 
         refresh = RefreshToken.for_user(user)
         refresh['company_id'] = company.id
+        refresh['user_id'] = user.id
 
         return {
             'refresh': str(refresh),

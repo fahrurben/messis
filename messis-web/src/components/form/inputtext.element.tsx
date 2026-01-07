@@ -19,7 +19,7 @@ const InputText = ({
   return (
     <input
       type={type}
-      className={cn("input", { "input-error": error })}
+      className={cn("input", { "input-error": error }, "w-full")}
       placeholder={placeholder}
       {...register}
       required={required}

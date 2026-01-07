@@ -9,3 +9,13 @@ export type FormLogin = {
 }
 
 export type LoginResponse = { refresh: string; access: string }
+
+export type FormProfile = {
+  firstname: string
+  lastname: string
+  title: string
+  capacity: number
+  bill_rate: number
+  cost_rate: number
+  profile_photo: string
+}

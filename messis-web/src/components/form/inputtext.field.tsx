@@ -15,12 +15,14 @@ const InputTextField = ({
   children: ReactNode
 }) => {
   return (
-    <div>
-      <label id={name}>
+    <div className="w-full">
+      <label id={name} className="w-full">
         {label}
         {required && <span className={"text-red-500"}>*</span>}
       </label>
-      {children}
+      <div className="w-full mt-2">
+        {children}
+      </div>
       {error && <span className="text-error">{error.message}</span>}
     </div>
   )
