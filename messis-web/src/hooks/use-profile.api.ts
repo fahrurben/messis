@@ -13,3 +13,18 @@ export const useGetProfile = (id) => {
     },
   })
 }
+
+export const useUpdateProfile = ({onSuccess, onError}) => {
+  return useMutation({
+    mutationFn: ({id, ...formData}) => {
+      let url = `${API_URL}/user-profiles/${id}`
+      return axios.patch(url, formData)
+    },
+    onSuccess: (data) => {
+      onSuccess?.(data)
+    },
+    onError: (error) => {
+      onError?.(error)
+    }
+  })
+}

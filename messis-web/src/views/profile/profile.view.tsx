@@ -3,18 +3,20 @@ import InputText from "../../components/form/inputtext.element.tsx"
 import { z } from "zod"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useGetProfile } from "../../hooks/use-profile.api.ts"
+import { toast } from 'react-toastify'
+import { useGetProfile, useUpdateProfile} from "../../hooks/use-profile.api.ts"
 import { store as authStore } from "../../stores/auth.store"
 import { useSnapshot } from "valtio/react"
 import { useEffect } from "react"
+import {show_form_error_message} from "../../helpers/form.helper.ts";
 
 const formSchema = z.object({
   firstname: z.string().min(3),
   lastname: z.string().min(3),
   title: z.string().min(3),
-  capacity: z.number(),
-  bill_rate: z.number(),
-  cost_rate: z.number(),
+  capacity: z.coerce.number(),
+  bill_rate: z.coerce.number(),
+  cost_rate: z.coerce.number(),
 })
 
 type FormValues = z.infer<typeof formSchema>
@@ -34,13 +36,24 @@ const ProfileView = () => {
 
   const { data: profileData } = useGetProfile(userId)
 
+  const useUpdateMutation = useUpdateProfile({
+    onSuccess: () => {
+      toast("Profile successfully updated")
+    },
+    onError: (errorResponse) => {
+      show_form_error_message(errorResponse, setError)
+    },
+  })
+
   useEffect(() => {
     if (profileData != null) {
       reset({ ...profileData })
     }
   }, [profileData])
 
-  const onSubmit = (values: FormValues) => {}
+  const onSubmit = (formData: FormValues) => {
+    useUpdateMutation.mutate({id: userId, ...formData})
+  }
 
   return (
     <div className="flex items-center justify-center py-8">
