@@ -4,6 +4,7 @@ import RootLayout from "./root.layout.tsx"
 import Home from "../views/home/home.view.tsx"
 import MainLayout from "./main.layout.tsx"
 import ProfileView from "../views/profile/profile.view.tsx"
+import ProjectListView from "../views/project/projectListView.tsx";
 
 const routeConfig = createBrowserRouter([
   {
@@ -16,6 +17,7 @@ const routeConfig = createBrowserRouter([
         children: [
           { path: "/", element: <Home /> },
           { path: "/profile", element: <ProfileView /> },
+          { path: "/projects", element: <ProjectListView /> }
         ],
       },
     ],
