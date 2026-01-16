@@ -14,11 +14,26 @@ const useGetAllProjects = (search = "") => {
         params["search"] = search
       }
 
-      const paramString = new URLSearchParams(params);
-      let response = await axios.get(url + '?' + paramString)
+      const paramString = new URLSearchParams(params)
+      let response = await axios.get(url + "?" + paramString)
       return response.data
-    }
+    },
   })
 }
 
-export { useGetAllProjects }
+const useCreateProject = ({ onSuccess, onError }) => {
+  return useMutation({
+    mutationFn: (formData) => {
+      const url = `${API_URL}/projects`
+      return axios.post(url, formData)
+    },
+    onSuccess: (data) => {
+      onSuccess?.(data)
+    },
+    onError: (error) => {
+      onError?.(error)
+    },
+  })
+}
+
+export { useGetAllProjects, useCreateProject }

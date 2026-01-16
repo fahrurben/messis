@@ -7,4 +7,4 @@ class UserProfileSerializer(serializers.ModelSerializer[UserProfile]):
 
     class Meta:
         model = UserProfile
-        fields = '__all__'
+        fields = ["firstname", "lastname", "title", "capacity", "bill_rate", "cost_rate", "profile_photo", "fullname"]

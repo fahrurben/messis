@@ -1,30 +1,27 @@
 import cn from "../../helpers/cn.ts"
 import type { FieldError, FieldValues, UseFormRegister } from "react-hook-form"
 
-const InputText = ({
+const CheckBox = ({
   name,
-  placeholder,
+  label,
   register,
   error,
   required = false,
   type = "text",
 }: {
   name: string
-  placeholder: string
+  label: string
   register: UseFormRegister<FieldValues>
   error?: FieldError
   required?: boolean
   type?: string
 }) => {
   return (
-    <input
-      type={type}
-      className={cn("input", { "input-error": error }, "w-full")}
-      placeholder={placeholder}
-      required={required}
-      {...register(name)}
-    />
+    <label className={cn("label", { "input-error": error }, "w-full")}>
+      <input type="checkbox" className="checkbox" {...register(name)} />
+      {label}
+    </label>
   )
 }
 
-export default InputText
+export default CheckBox
