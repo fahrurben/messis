@@ -6,6 +6,7 @@ import MainLayout from "./main.layout.tsx"
 import ProfileView from "../views/profile/profile.view.tsx"
 import ProjectlistView from "../views/project/projectlist.view.tsx"
 import ProjectCreateView from "../views/project/projectcreate.view.tsx"
+import ProjectEditView from "../views/project/projectedit.view.tsx"
 
 const routeConfig = createBrowserRouter([
   {
@@ -20,6 +21,7 @@ const routeConfig = createBrowserRouter([
           { path: "/profile", element: <ProfileView /> },
           { path: "/projects", element: <ProjectlistView /> },
           { path: "/projects/create", element: <ProjectCreateView /> },
+          { path: "/projects/edit/:id", element: <ProjectEditView /> },
         ],
       },
     ],

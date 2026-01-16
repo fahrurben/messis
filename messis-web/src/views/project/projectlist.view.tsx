@@ -36,8 +36,12 @@ const ProjectlistView = () => {
                   <td>{project.start_date}</td>
                   <td>{project.end_date}</td>
                   <td>
-                    <button className="btn btn-ghost btn-xs">Details</button>
-                    <button className="btn btn-ghost btn-xs">Edit</button>
+                    <button
+                      className="btn btn-ghost btn-xs"
+                      onClick={() => navigate(`/projects/edit/${project.id}`)}
+                    >
+                      Edit
+                    </button>
                   </td>
                 </tr>
               )

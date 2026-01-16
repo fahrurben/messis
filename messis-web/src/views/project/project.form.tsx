@@ -9,10 +9,14 @@ import CheckBox from "../../components/form/checkbox.element.tsx"
 import { PlusIcon } from "@heroicons/react/24/solid"
 import { TrashIcon } from "@heroicons/react/24/solid"
 import cn from "../../helpers/cn.ts"
-import { useCreateProject } from "../../hooks/use-project.api.ts"
+import {
+  useCreateProject,
+  useUpdateProject,
+} from "../../hooks/use-project.api.ts"
 import { toast } from "react-toastify"
 import { useGetAllTeams } from "../../hooks/user-team.api.ts"
 import { useNavigate } from "react-router"
+import { useEffect } from "react"
 
 const teamSchema = z.object({
   id: z.coerce.number(),
@@ -40,12 +44,13 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>
 
-const ProjectForm = () => {
+const ProjectForm = ({ id = null, instanceData = null }) => {
   const navigate = useNavigate()
 
   const {
     register,
     formState: { errors },
+    reset,
     control,
     handleSubmit,
   } = useForm<FormValues>({
@@ -83,9 +88,26 @@ const ProjectForm = () => {
 
   const { data: { results: teams } = {} } = useGetAllTeams("")
 
+  useEffect(() => {
+    if (instanceData) {
+      reset({ ...instanceData }, { keepDirty: true })
+    }
+  }, [instanceData])
+
   const createMutation = useCreateProject({
     onSuccess: () => {
       toast("Project created")
+      navigate("/projects")
+    },
+    onError: (err) => {
+      toast(err.message)
+    },
+  })
+
+  const updateMutation = useUpdateProject({
+    onSuccess: () => {
+      toast("Project updated")
+      navigate("/projects")
     },
     onError: (err) => {
       toast(err.message)
@@ -102,15 +124,19 @@ const ProjectForm = () => {
       : null
     formData.tasks = values.tasks?.map((data) => {
       const { id, ...restOfObject } = data
-      return restOfObject
+      return id === 0 ? restOfObject : data
     })
     formData.projectteam_set = values.projectteam_set?.map((data) => {
       const { id, ...restOfObject } = data
-      return restOfObject
+      return id === 0 ? restOfObject : data
     })
     console.log(formData)
 
-    createMutation.mutate(formData)
+    if (id) {
+      updateMutation.mutate({ id: id, ...formData })
+    } else {
+      createMutation.mutate(formData)
+    }
   }
 
   return (
@@ -282,7 +308,11 @@ const ProjectForm = () => {
           <a
             className="btn mt-4"
             onClick={() => {
-              appendTask()
+              appendTask({
+                id: null,
+                name: "",
+                is_billable: false,
+              })
             }}
           >
             <PlusIcon className="size-6" />
@@ -346,7 +376,11 @@ const ProjectForm = () => {
           <a
             className="btn mt-4"
             onClick={() => {
-              appendTeam()
+              appendTeam({
+                id: null,
+                team_id: null,
+                is_admin: false,
+              })
             }}
           >
             <PlusIcon className="size-6" />

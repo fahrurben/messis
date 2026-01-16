@@ -21,6 +21,18 @@ const useGetAllProjects = (search = "") => {
   })
 }
 
+const useGetProject = (id: number) => {
+  return useQuery({
+    queryKey: ["project", id],
+    queryFn: async () => {
+      const url = `${API_URL}/projects/${id}`
+      const response = await axios.get(url)
+      return response.data
+    },
+    enabled: !!id,
+  })
+}
+
 const useCreateProject = ({ onSuccess, onError }) => {
   return useMutation({
     mutationFn: (formData) => {
@@ -36,4 +48,19 @@ const useCreateProject = ({ onSuccess, onError }) => {
   })
 }
 
-export { useGetAllProjects, useCreateProject }
+const useUpdateProject = ({ onSuccess, onError }) => {
+  return useMutation({
+    mutationFn: ({ id, ...formData }) => {
+      const url = `${API_URL}/projects/${id}`
+      return axios.patch(url, formData)
+    },
+    onSuccess: (data) => {
+      onSuccess?.(data)
+    },
+    onError: (err) => {
+      onError?.(err)
+    },
+  })
+}
+
+export { useGetAllProjects, useCreateProject, useGetProject, useUpdateProject }
