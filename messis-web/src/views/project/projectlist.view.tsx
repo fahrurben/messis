@@ -1,10 +1,39 @@
-import { useGetAllProjects } from "../../hooks/use-project.api.ts"
+import {
+  useDeleteProject,
+  useGetAllProjects,
+  useUpdateProject,
+} from "../../hooks/use-project.api.ts"
 import { useNavigate } from "react-router"
 import { PlusIcon } from "@heroicons/react/24/solid"
+import { useState } from "react"
+import { toast } from "react-toastify"
 
 const ProjectlistView = () => {
   const navigate = useNavigate()
   const { data: { results: projects } = {}, refetch } = useGetAllProjects("")
+
+  const [selectedProject, setSelectedProject] = useState(null)
+
+  const deleteMutation = useDeleteProject({
+    onSuccess: () => {
+      toast("Project deleted")
+      refetch()
+    },
+    onError: (err) => {
+      toast(err.message)
+    },
+  })
+
+  const deleteProjectConfirmation = (project) => {
+    console.log(project)
+    setSelectedProject(project)
+    document.getElementById("delete_modal").showModal()
+  }
+
+  const handleDeleteProject = () => {
+    console.log(selectedProject)
+    deleteMutation.mutate(selectedProject.id)
+  }
 
   return (
     <div className="">
@@ -42,6 +71,12 @@ const ProjectlistView = () => {
                     >
                       Edit
                     </button>
+                    <button
+                      className="btn btn-ghost btn-xs"
+                      onClick={() => deleteProjectConfirmation(project)}
+                    >
+                      Delete
+                    </button>
                   </td>
                 </tr>
               )
@@ -49,6 +84,26 @@ const ProjectlistView = () => {
           </tbody>
         </table>
       </div>
+      <dialog id="delete_modal" className="modal">
+        <div className="modal-box">
+          <h3 className="font-bold text-lg">Confirmation</h3>
+          <p className="py-4">
+            Are you sure want to delete {selectedProject?.name} ?
+          </p>
+          <div className="modal-action">
+            <form method="dialog">
+              {/* if there is a button in form, it will close the modal */}
+              <button className="btn">No</button>
+              <button className="btn ml-2" onClick={handleDeleteProject}>
+                Yes
+              </button>
+            </form>
+          </div>
+        </div>
+        <form method="dialog" className="modal-backdrop">
+          <button>close</button>
+        </form>
+      </dialog>
     </div>
   )
 }

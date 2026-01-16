@@ -63,4 +63,25 @@ const useUpdateProject = ({ onSuccess, onError }) => {
   })
 }
 
-export { useGetAllProjects, useCreateProject, useGetProject, useUpdateProject }
+const useDeleteProject = ({ onSuccess, onError }) => {
+  return useMutation({
+    mutationFn: (id) => {
+      const url = `${API_URL}/projects/${id}`
+      return axios.delete(url)
+    },
+    onSuccess: (data) => {
+      onSuccess?.(data)
+    },
+    onError: (err) => {
+      onError?.(err)
+    },
+  })
+}
+
+export {
+  useGetAllProjects,
+  useCreateProject,
+  useGetProject,
+  useUpdateProject,
+  useDeleteProject,
+}

@@ -7,21 +7,21 @@ const MainLayout = () => {
       <div className="navbar bg-base-100 shadow-sm flex justify-center">
         <div className="flex flex-1 justify-between max-w-7xl">
           <div className="flex">
-            <a className="btn btn-ghost text-xl">Messis</a>
+            <Link to="/" className="btn btn-ghost text-xl">
+              Messis
+            </Link>
           </div>
           <div className="flex">
             <ul className="menu menu-horizontal px-1">
-              <li><Link to="/projects">Project</Link></li>
               <li>
-                <details>
-                  <summary>Parent</summary>
-                  <ul className="p-2 bg-base-100 w-40 z-1">
-                    <li><a>Submenu 1</a></li>
-                    <li><a>Submenu 2</a></li>
-                  </ul>
-                </details>
+                <a>Time Entry</a>
               </li>
-              <li><a>Item 3</a></li>
+              <li>
+                <Link to="/projects">Project</Link>
+              </li>
+              <li>
+                <a>Teams</a>
+              </li>
             </ul>
           </div>
           <div className="flex-none">
