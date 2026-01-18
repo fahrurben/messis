@@ -1,27 +1,30 @@
 import InputTextField from "../../components/form/inputtext.field.tsx"
 import InputText from "../../components/form/inputtext.element.tsx"
 import { z } from "zod"
-import { useForm } from "react-hook-form"
+import { type SubmitHandler, useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { toast } from 'react-toastify'
-import { useGetProfile, useUpdateProfile} from "../../hooks/use-profile.api.ts"
+import { toast } from "react-toastify"
+import { useGetProfile, useUpdateProfile } from "../../hooks/use-profile.api.ts"
 import { store as authStore } from "../../stores/auth.store"
 import { useSnapshot } from "valtio/react"
 import { useEffect } from "react"
-import {show_form_error_message} from "../../helpers/form.helper.ts";
+import { show_form_error_message } from "../../helpers/form.helper.ts"
+import useAuthenticated from "../../hooks/use-authenticated.hook.ts"
 
 const formSchema = z.object({
   firstname: z.string().min(3),
   lastname: z.string().min(3),
   title: z.string().min(3),
-  capacity: z.coerce.number(),
-  bill_rate: z.coerce.number(),
-  cost_rate: z.coerce.number(),
+  capacity: z.coerce.number<number>(),
+  bill_rate: z.coerce.number<number>(),
+  cost_rate: z.coerce.number<number>(),
 })
 
 type FormValues = z.infer<typeof formSchema>
 
 const ProfileView = () => {
+  useAuthenticated()
+
   const { userId } = useSnapshot(authStore)
 
   const {
@@ -40,8 +43,8 @@ const ProfileView = () => {
     onSuccess: () => {
       toast("Profile successfully updated")
     },
-    onError: (errorResponse) => {
-      show_form_error_message(errorResponse, setError)
+    onError: (error: unknown) => {
+      show_form_error_message(error, setError)
     },
   })
 
@@ -51,8 +54,8 @@ const ProfileView = () => {
     }
   }, [profileData])
 
-  const onSubmit = (formData: FormValues) => {
-    useUpdateMutation.mutate({id: userId, ...formData})
+  const onSubmit: SubmitHandler<FormValues> = (formData) => {
+    useUpdateMutation.mutate({ id: userId, ...formData })
   }
 
   return (
@@ -70,9 +73,8 @@ const ProfileView = () => {
             >
               <div className="w-full">
                 <InputText
-                  name={"firstname"}
                   placeholder={"First Name"}
-                  register={register}
+                  control={register("firstname")}
                   error={errors?.firstname}
                   required
                 />
@@ -87,9 +89,8 @@ const ProfileView = () => {
             >
               <div className="w-full">
                 <InputText
-                  name={"lastname"}
                   placeholder={"lastname"}
-                  register={register}
+                  control={register("lastname")}
                   error={errors?.lastname}
                   required
                 />
@@ -104,9 +105,8 @@ const ProfileView = () => {
             >
               <div className="w-full">
                 <InputText
-                  name={"title"}
                   placeholder={"Title"}
-                  register={register}
+                  control={register("title")}
                   error={errors?.title}
                   required
                 />
@@ -121,9 +121,8 @@ const ProfileView = () => {
             >
               <div className="w-full">
                 <InputText
-                  name={"bill_rate"}
                   placeholder={"Bill Rate"}
-                  register={register}
+                  control={register("bill_rate")}
                   type={"number"}
                   error={errors?.bill_rate}
                   required
@@ -139,9 +138,8 @@ const ProfileView = () => {
             >
               <div className="w-full">
                 <InputText
-                  name={"cost_rate"}
                   placeholder={"Cost Rate"}
-                  register={register}
+                  control={register("cost_rate")}
                   type={"number"}
                   error={errors?.cost_rate}
                   required

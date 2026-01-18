@@ -1,21 +1,22 @@
 import axios from "axios"
 import { API_URL } from "../helpers/constant.js"
 import { useMutation, useQuery } from "@tanstack/react-query"
+import type { OnErrorCallback, OnSuccessCallback } from "../commons/types.ts"
 
 const useGetAllProjects = (search = "") => {
   return useQuery({
     queryKey: ["projects", search],
     queryFn: async () => {
-      let url = `${API_URL}/projects`
+      const url = `${API_URL}/projects`
 
-      let params = {}
+      const params: Record<string, string> = {}
 
       if (search) {
         params["search"] = search
       }
 
       const paramString = new URLSearchParams(params)
-      let response = await axios.get(url + "?" + paramString)
+      const response = await axios.get(url + "?" + paramString)
       return response.data
     },
   })
@@ -33,9 +34,15 @@ const useGetProject = (id: number) => {
   })
 }
 
-const useCreateProject = ({ onSuccess, onError }) => {
+const useCreateProject = ({
+  onSuccess,
+  onError,
+}: {
+  onSuccess: OnSuccessCallback
+  onError: OnErrorCallback
+}) => {
   return useMutation({
-    mutationFn: (formData) => {
+    mutationFn: (formData: Record<string, unknown>) => {
       const url = `${API_URL}/projects`
       return axios.post(url, formData)
     },
@@ -48,9 +55,15 @@ const useCreateProject = ({ onSuccess, onError }) => {
   })
 }
 
-const useUpdateProject = ({ onSuccess, onError }) => {
+const useUpdateProject = ({
+  onSuccess,
+  onError,
+}: {
+  onSuccess: OnSuccessCallback
+  onError: OnErrorCallback
+}) => {
   return useMutation({
-    mutationFn: ({ id, ...formData }) => {
+    mutationFn: ({ id, ...formData }: Record<string, unknown>) => {
       const url = `${API_URL}/projects/${id}`
       return axios.patch(url, formData)
     },
@@ -63,7 +76,13 @@ const useUpdateProject = ({ onSuccess, onError }) => {
   })
 }
 
-const useDeleteProject = ({ onSuccess, onError }) => {
+const useDeleteProject = ({
+  onSuccess,
+  onError,
+}: {
+  onSuccess: OnSuccessCallback
+  onError: OnErrorCallback
+}) => {
   return useMutation({
     mutationFn: (id) => {
       const url = `${API_URL}/projects/${id}`

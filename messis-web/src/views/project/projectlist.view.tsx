@@ -7,8 +7,11 @@ import { useNavigate } from "react-router"
 import { PlusIcon } from "@heroicons/react/24/solid"
 import { useState } from "react"
 import { toast } from "react-toastify"
+import useAuthenticated from "../../hooks/use-authenticated.hook.ts"
 
 const ProjectlistView = () => {
+  useAuthenticated()
+
   const navigate = useNavigate()
   const { data: { results: projects } = {}, refetch } = useGetAllProjects("")
 
@@ -25,7 +28,6 @@ const ProjectlistView = () => {
   })
 
   const deleteProjectConfirmation = (project) => {
-    console.log(project)
     setSelectedProject(project)
     document.getElementById("delete_modal").showModal()
   }

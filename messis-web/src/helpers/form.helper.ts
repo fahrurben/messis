@@ -1,11 +1,14 @@
-import { toast } from 'react-toastify'
+import { toast } from "react-toastify"
 
-export function show_form_error_message(errorResponse,setFormError) {
-  let errorMessages = errorResponse.response.data
-  if (typeof errorMessages === 'object' && !Array.isArray(errorMessages)) {
-    for (let key in errorMessages) {
+export function show_form_error_message(
+  errorResponse: unknown,
+  setFormError: unknown,
+) {
+  const errorMessages = errorResponse.response.data
+  if (typeof errorMessages === "object" && !Array.isArray(errorMessages)) {
+    for (const key in errorMessages) {
       setFormError(key, {
-        type: 'manual',
+        type: "manual",
         message: errorMessages[key],
       })
     }
@@ -13,4 +16,3 @@ export function show_form_error_message(errorResponse,setFormError) {
     toast.error(errorMessages[0])
   }
 }
-

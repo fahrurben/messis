@@ -67,9 +67,8 @@ const Login = () => {
               required={true}
             >
               <InputText
-                name={"email"}
                 placeholder={"email"}
-                register={register}
+                control={register("email")}
                 error={errors?.email}
                 required
               />
@@ -82,10 +81,9 @@ const Login = () => {
               required={true}
             >
               <InputText
-                name={"password"}
                 type={"password"}
                 placeholder={"password"}
-                register={register}
+                control={register("password")}
                 error={errors?.password}
                 required
               />
@@ -97,10 +95,9 @@ const Login = () => {
               required={true}
             >
               <InputText
-                name={"subdomain"}
                 type={"subdomain"}
                 placeholder={"subdomain"}
-                register={register}
+                control={register("subdomain")}
                 error={errors?.subdomain}
                 required
               />

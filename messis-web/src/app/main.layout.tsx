@@ -1,7 +1,15 @@
-import { Outlet } from "react-router"
+import { Outlet, useNavigate } from "react-router"
 import { Link } from "react-router"
+import { actions as authActions } from "../stores/auth.store.ts"
 
 const MainLayout = () => {
+  const navigate = useNavigate()
+
+  const logoutHandle = () => {
+    authActions.removeToken()
+    navigate("/")
+  }
+
   return (
     <div>
       <div className="navbar bg-base-100 shadow-sm flex justify-center">
@@ -46,7 +54,7 @@ const MainLayout = () => {
                   <Link to="/profile">Profile</Link>
                 </li>
                 <li>
-                  <a>Logout</a>
+                  <a onClick={logoutHandle}>Logout</a>
                 </li>
               </ul>
             </div>

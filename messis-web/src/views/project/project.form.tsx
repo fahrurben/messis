@@ -1,4 +1,3 @@
-import { z } from "zod"
 import { useFieldArray, useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import moment from "moment/moment"
@@ -14,37 +13,21 @@ import {
   useUpdateProject,
 } from "../../hooks/use-project.api.ts"
 import { toast } from "react-toastify"
-import { useGetAllTeams } from "../../hooks/user-team.api.ts"
+import { useGetAllTeams } from "../../hooks/use-team.api.ts"
 import { useNavigate } from "react-router"
 import { useEffect } from "react"
+import {
+  type ProjectFormValue,
+  projectSchema,
+  type Team,
+} from "../../commons/types.ts"
 
-const teamSchema = z.object({
-  id: z.coerce.number(),
-  team_id: z.coerce.number(),
-  is_admin: z.boolean(),
-})
+interface ProjectFormProps {
+  id?: number
+  instanceData?: unknown
+}
 
-const taskSchema = z.object({
-  id: z.coerce.number(),
-  name: z.string(),
-  is_billable: z.boolean(),
-})
-
-const formSchema = z.object({
-  name: z.string().min(3),
-  code: z.string().min(3),
-  description: z.string(),
-  start_date: z.coerce.date(),
-  end_date: z.coerce.date(),
-  is_billable: z.boolean(),
-  is_active: z.boolean(),
-  projectteam_set: z.array(teamSchema),
-  tasks: z.array(taskSchema),
-})
-
-type FormValues = z.infer<typeof formSchema>
-
-const ProjectForm = ({ id = null, instanceData = null }) => {
+const ProjectForm = ({ id, instanceData }: ProjectFormProps) => {
   const navigate = useNavigate()
 
   const {
@@ -53,14 +36,14 @@ const ProjectForm = ({ id = null, instanceData = null }) => {
     reset,
     control,
     handleSubmit,
-  } = useForm<FormValues>({
-    resolver: zodResolver(formSchema),
+  } = useForm<ProjectFormValue>({
+    resolver: zodResolver(projectSchema),
     defaultValues: {
       name: "",
       code: "",
       description: "",
-      start_date: moment(),
-      end_date: moment(),
+      start_date: new Date(),
+      end_date: new Date(),
       is_billable: false,
       is_active: false,
       projectteam_set: [],
@@ -86,7 +69,7 @@ const ProjectForm = ({ id = null, instanceData = null }) => {
     name: "tasks",
   })
 
-  const { data: { results: teams } = {} } = useGetAllTeams("")
+  const { data: teams = [] } = useGetAllTeams("")
 
   useEffect(() => {
     if (instanceData) {
@@ -114,8 +97,8 @@ const ProjectForm = ({ id = null, instanceData = null }) => {
     },
   })
 
-  const onSubmit = (values: FormValues) => {
-    const formData = { ...values }
+  const onSubmit = (values: ProjectFormValue) => {
+    const formData: Record<string, unknown> = { ...values }
     formData.start_date = values.start_date
       ? moment(values.start_date).format("YYYY-MM-DD")
       : null
@@ -152,9 +135,8 @@ const ProjectForm = ({ id = null, instanceData = null }) => {
             >
               <div className="w-full">
                 <InputText
-                  name={"name"}
                   placeholder={"Name"}
-                  register={register}
+                  control={register("name")}
                   error={errors?.name}
                   required
                 />
@@ -169,9 +151,8 @@ const ProjectForm = ({ id = null, instanceData = null }) => {
             >
               <div className="w-full">
                 <InputText
-                  name={"code"}
                   placeholder={"Code"}
-                  register={register}
+                  control={register("code")}
                   error={errors?.code}
                   required
                 />
@@ -186,10 +167,9 @@ const ProjectForm = ({ id = null, instanceData = null }) => {
             >
               <div className="w-full">
                 <InputText
-                  name={"start_date"}
                   placeholder={"Start Date"}
                   type="date"
-                  register={register}
+                  control={register("start_date")}
                   error={errors?.start_date}
                   required
                 />
@@ -204,10 +184,9 @@ const ProjectForm = ({ id = null, instanceData = null }) => {
             >
               <div className="w-full">
                 <InputText
-                  name={"end_date"}
                   placeholder={"End Date"}
                   type="date"
-                  register={register}
+                  control={register("end_date")}
                   error={errors?.end_date}
                   required
                 />
@@ -222,10 +201,9 @@ const ProjectForm = ({ id = null, instanceData = null }) => {
               >
                 <div className="w-full">
                   <TextArea
-                    name={"description"}
                     placeholder={"Description"}
                     type="date"
-                    register={register}
+                    control={register("description")}
                     error={errors?.description}
                     required
                   />
@@ -235,18 +213,16 @@ const ProjectForm = ({ id = null, instanceData = null }) => {
 
             <div className="col-span-full">
               <CheckBox
-                name={"is_billable"}
                 label={"Is Billable"}
-                register={register}
+                control={register("end_date")}
                 error={errors?.is_billable}
               />
             </div>
 
             <div className="col-span-full">
               <CheckBox
-                name={"is_active"}
                 label={"Is Active"}
-                register={register}
+                control={register("end_date")}
                 error={errors?.is_active}
               />
             </div>
@@ -259,17 +235,14 @@ const ProjectForm = ({ id = null, instanceData = null }) => {
             <div>
               {index > 0 && <div className="divider"></div>}
               <div className="flex items-center">
-                <input
-                  type="hidden"
-                  name="id"
-                  {...register(`tasks.${index}.id`)}
-                />
+                <input type="hidden" {...register(`tasks.${index}.id`)} />
                 <div className="w-full">
                   <input
                     type={"text"}
+                    id={field.name}
                     className={cn(
                       "input",
-                      { "input-error": field.error },
+                      { "input-error": errors.tasks?.[index] },
                       "w-full",
                     )}
                     placeholder={"Name"}
@@ -281,7 +254,7 @@ const ProjectForm = ({ id = null, instanceData = null }) => {
                   <label
                     className={cn(
                       "label",
-                      { "input-error": field.error },
+                      { "input-error": errors.tasks?.[index] },
                       "w-full",
                     )}
                   >
@@ -328,17 +301,17 @@ const ProjectForm = ({ id = null, instanceData = null }) => {
               <div className="flex items-center">
                 <input
                   type="hidden"
-                  name="id"
                   {...register(`projectteam_set.${index}.id`)}
                 />
                 <div className="w-full">
                   <select
+                    id={field.id}
                     className="select"
                     required={true}
                     {...register(`projectteam_set.${index}.team_id`)}
                   >
                     <option>- Team -</option>
-                    {teams?.map((team, index) => (
+                    {teams?.map((team: Team) => (
                       <option key={team.id} value={team.id}>
                         {team.userprofile.fullname}
                       </option>
@@ -349,7 +322,7 @@ const ProjectForm = ({ id = null, instanceData = null }) => {
                   <label
                     className={cn(
                       "label",
-                      { "input-error": field.error },
+                      { "input-error": errors.projectteam_set?.[index] },
                       "w-full",
                     )}
                   >

@@ -1,17 +1,15 @@
 import cn from "../../helpers/cn.ts"
-import type { FieldError, FieldValues, UseFormRegister } from "react-hook-form"
+import type { FieldError, UseFormRegisterReturn } from "react-hook-form"
 
 const InputText = ({
-  name,
   placeholder,
-  register,
+  control,
   error,
   required = false,
   type = "text",
 }: {
-  name: string
   placeholder: string
-  register: UseFormRegister<FieldValues>
+  control: UseFormRegisterReturn<string>
   error?: FieldError
   required?: boolean
   type?: string
@@ -22,7 +20,7 @@ const InputText = ({
       className={cn("input", { "input-error": error }, "w-full")}
       placeholder={placeholder}
       required={required}
-      {...register(name)}
+      {...control}
     />
   )
 }
