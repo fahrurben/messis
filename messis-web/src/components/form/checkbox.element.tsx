@@ -1,10 +1,5 @@
 import cn from "../../helpers/cn.ts"
-import type {
-  FieldError,
-  FieldValues,
-  UseFormRegister,
-  UseFormRegisterReturn,
-} from "react-hook-form"
+import type { FieldError, UseFormRegisterReturn } from "react-hook-form"
 
 const CheckBox = ({
   label,

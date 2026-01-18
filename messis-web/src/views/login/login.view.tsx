@@ -45,7 +45,7 @@ const Login = () => {
     },
     onSuccess: (data: LoginResponse) => {
       authActions.setToken(data.access)
-      navigate("/profile")
+      navigate("/")
     },
   })
 

@@ -3,19 +3,21 @@ from rest_framework import serializers
 from messis.models import TimeEntry, Project, Task
 from typing import Any
 
+from messis.serializers import ProjectSerializer, TaskSerializer
+
 
 class TimeEntrySerializer(serializers.ModelSerializer[TimeEntry]):
     project_id = serializers.IntegerField()
-    project: Any = serializers.PrimaryKeyRelatedField(read_only=True)
+    project: Any = ProjectSerializer(read_only=True)
     task_id = serializers.IntegerField()
-    task: Any = serializers.PrimaryKeyRelatedField(read_only=True)
+    task: Any = TaskSerializer(read_only=True)
     team_id = serializers.IntegerField(read_only=True)
     team: Any = serializers.PrimaryKeyRelatedField(read_only=True)
 
     class Meta:
         model = TimeEntry
         fields = (
-        'id', 'project_id', 'project', 'team_id', 'team', 'task_id', 'task', 'summary', 'entry_at', 'total_seconds')
+        'id', 'project_id', 'project', 'team_id', 'team', 'task_id', 'task', 'summary', 'entry_at', 'total_seconds', 'total_time_in_string')
 
     def create(self, validated_data):
         current_user = self.context['user']

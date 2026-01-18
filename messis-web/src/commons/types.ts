@@ -72,3 +72,24 @@ export const projectSchema = z.object({
 })
 
 export type ProjectFormValue = z.infer<typeof projectSchema>
+
+export type ProjectType = {
+  id: number
+  name: string
+  code: string
+  description: string
+  start_date: string
+  end_date: string
+  is_billable: boolean
+  is_active: boolean
+  projectteam_set: {
+    id: number
+    team_id: number
+    is_admin: boolean
+  }
+  tasks: {
+    id: number
+    name: string
+    is_billable: boolean
+  }
+}

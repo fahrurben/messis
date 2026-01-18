@@ -84,7 +84,7 @@ const useDeleteProject = ({
   onError: OnErrorCallback
 }) => {
   return useMutation({
-    mutationFn: (id) => {
+    mutationFn: (id: number) => {
       const url = `${API_URL}/projects/${id}`
       return axios.delete(url)
     },

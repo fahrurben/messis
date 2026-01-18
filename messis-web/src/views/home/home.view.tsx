@@ -1,29 +1,30 @@
 import useAuthenticated from "../../hooks/use-authenticated.hook.ts"
-import { PlusIcon } from "@heroicons/react/24/solid"
+import { PlusIcon, PencilIcon } from "@heroicons/react/24/solid"
 import { useNavigate } from "react-router"
 import { useEffect, useState } from "react"
 import moment from "moment/moment"
 import cn from "../../helpers/cn.ts"
+import { useGetTimeEntryByDate } from "../../hooks/use-timeentry.api.ts"
 
 const Home = () => {
   useAuthenticated()
   const navigate = useNavigate()
   const [currentDate, setCurrentDate] = useState(new Date())
   const [arrWeekDays, setArrWeekDays] = useState([])
-  const [timeEntries, setTimeEntries] = useState([])
 
   useEffect(() => {
     let arrWeek = []
+    const firstDayOfWeek = moment(currentDate).clone().startOf("week")
 
-    for (let i = 1; i <= 7; i++) {
-      const day = moment(currentDate).clone().weekday(i).toDate()
+    for (let i = 0; i < 7; i++) {
+      const day = firstDayOfWeek.clone().add(i, "d").toDate()
       arrWeek.push(day)
     }
 
     setArrWeekDays(arrWeek)
-
-    const getCurrentTimeEntries = async () => {}
   }, [currentDate])
+
+  const { data: timeEntries = [] } = useGetTimeEntryByDate(currentDate)
 
   return (
     <div>
@@ -32,7 +33,7 @@ const Home = () => {
           {moment(currentDate).format("dddd, D MMM")}
         </h1>
         <button className="btn" onClick={() => navigate("/projects/create")}>
-          <PlusIcon class="size-6" />
+          <PlusIcon className="size-6" />
         </button>
       </div>
       <div className="overflow-x-auto mt-8">
@@ -55,6 +56,35 @@ const Home = () => {
               )
             })}
           </div>
+        </div>
+        <div>
+          {timeEntries &&
+            timeEntries.map((timeEntry) => {
+              return (
+                <div className="flex border-b-1 border-gray-200 p-4 gap-4">
+                  <div className="flex-1">
+                    <h3 className="text-xl font-bold w-full py-2">
+                      {timeEntry.project.name}
+                    </h3>
+                    <h4 className="text-sm font-bold w-full py-1">
+                      {timeEntry.task.name}
+                    </h4>
+                    <p className="text-sm w-full">{timeEntry.summary}</p>
+                  </div>
+                  <div className="flex flex-0 items-center">
+                    <span className="w-full py-1 font-bold text-xl">
+                      {timeEntry.total_time_in_string}
+                    </span>
+                  </div>
+                  <div className="flex flex-0 items-center">
+                    <a className="btn">
+                      <PencilIcon className="size-6" />
+                      Edit
+                    </a>
+                  </div>
+                </div>
+              )
+            })}
         </div>
       </div>
     </div>

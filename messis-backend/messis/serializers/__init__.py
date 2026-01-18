@@ -2,7 +2,7 @@ from .register_serializer import RegisterSerializer
 from .user_profile_serializer import UserProfileSerializer
 from .user_serializer import UserSerializer
 from .upload_image_serializer import UploadImageSerializer
-from .project_serializer import ProjectSerializer
+from .project_serializer import TaskSerializer, ProjectTeamSerializer, ProjectSerializer
 from .invite_serializer import InviteSerializer
 from .time_entry_serializer import TimeEntrySerializer
 
@@ -11,6 +11,8 @@ __all__ = [
     'UserProfileSerializer',
     'UserSerializer',
     'UploadImageSerializer',
+    'TaskSerializer',
+    'ProjectTeamSerializer',
     'ProjectSerializer',
     'InviteSerializer',
     'TimeEntrySerializer',
