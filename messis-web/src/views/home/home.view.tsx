@@ -5,12 +5,23 @@ import { useEffect, useState } from "react"
 import moment from "moment/moment"
 import cn from "../../helpers/cn.ts"
 import { useGetTimeEntryByDate } from "../../hooks/use-timeentry.api.ts"
+import TimeentryForm from "./timeentry.form.tsx"
+
+const initialValues = {
+  project_id: null,
+  team_id: null,
+  summary: "",
+  total_time: "",
+}
 
 const Home = () => {
   useAuthenticated()
   const navigate = useNavigate()
   const [currentDate, setCurrentDate] = useState(new Date())
   const [arrWeekDays, setArrWeekDays] = useState([])
+  const [formAddInitialValues, setFormAddInitialValues] = useState({
+    ...initialValues,
+  })
 
   useEffect(() => {
     let arrWeek = []
@@ -26,13 +37,20 @@ const Home = () => {
 
   const { data: timeEntries = [] } = useGetTimeEntryByDate(currentDate)
 
+  const addBtnClicked = () => {
+    setFormAddInitialValues({
+      ...initialValues,
+    })
+    document.getElementById("modal_create").showModal()
+  }
+
   return (
     <div>
       <div className="flex">
         <h1 className="text-xl font-bold mr-auto">
           {moment(currentDate).format("dddd, D MMM")}
         </h1>
-        <button className="btn" onClick={() => navigate("/projects/create")}>
+        <button className="btn" onClick={addBtnClicked}>
           <PlusIcon className="size-6" />
         </button>
       </div>
@@ -48,6 +66,7 @@ const Home = () => {
                       "bg-gray-200": weekDay.getDate() == currentDate.getDate(),
                     },
                   )}
+                  onClick={() => setCurrentDate(weekDay)}
                 >
                   <h5 className="text-md font-bold w-full">
                     {moment(weekDay).format("ddd")}
@@ -87,6 +106,15 @@ const Home = () => {
             })}
         </div>
       </div>
+      <dialog id="modal_create" className="modal">
+        <div className="modal-box md:w-5/12 max-w-5xl">
+          <h3 className="font-bold text-lg">Time Entry</h3>
+          <TimeentryForm />
+        </div>
+        <form method="dialog" className="modal-backdrop">
+          <button>close</button>
+        </form>
+      </dialog>
     </div>
   )
 }

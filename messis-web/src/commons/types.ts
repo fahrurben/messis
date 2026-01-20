@@ -47,6 +47,11 @@ export type Team = {
   }
 }
 
+export type SelectOptionType = {
+  value: string
+  label: string
+}
+
 const teamSchema = z.object({
   id: z.coerce.number<number>().nullable(),
   team_id: z.coerce.number<number>().nullable(),
@@ -82,14 +87,23 @@ export type ProjectType = {
   end_date: string
   is_billable: boolean
   is_active: boolean
-  projectteam_set: {
+  projectteam_set: Array<{
     id: number
     team_id: number
     is_admin: boolean
-  }
-  tasks: {
+  }>
+  tasks: Array<{
     id: number
     name: string
     is_billable: boolean
-  }
+  }>
 }
+
+export const timeEntrySchema = z.object({
+  project_id: z.coerce.number<number>().nullable(),
+  task_id: z.coerce.number<number>().nullable(),
+  summary: z.string(),
+  total_time: z.string(),
+})
+
+export type TimeEntryValue = z.infer<typeof timeEntrySchema>
