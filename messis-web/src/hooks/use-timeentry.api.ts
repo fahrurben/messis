@@ -1,7 +1,8 @@
 import axios from "axios"
 import { API_URL } from "../helpers/constant.js"
-import { useQuery } from "@tanstack/react-query"
+import { useMutation, useQuery } from "@tanstack/react-query"
 import moment from "moment/moment"
+import type { OnErrorCallback, OnSuccessCallback } from "../commons/types.ts"
 
 const useGetTimeEntryByDate = (date = null) => {
   return useQuery({
@@ -23,4 +24,25 @@ const useGetTimeEntryByDate = (date = null) => {
   })
 }
 
-export { useGetTimeEntryByDate }
+const useCreateTimeEntry = ({
+  onSuccess,
+  onError,
+}: {
+  onSuccess: OnSuccessCallback
+  onError: OnErrorCallback
+}) => {
+  return useMutation({
+    mutationFn: (formData: Record<string, unknown>) => {
+      const url = `${API_URL}/time-entries`
+      return axios.post(url, formData)
+    },
+    onSuccess: (data) => {
+      onSuccess?.(data)
+    },
+    onError: (error) => {
+      onError?.(error)
+    },
+  })
+}
+
+export { useGetTimeEntryByDate, useCreateTimeEntry }

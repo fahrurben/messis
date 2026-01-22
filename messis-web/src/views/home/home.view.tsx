@@ -8,8 +8,8 @@ import { useGetTimeEntryByDate } from "../../hooks/use-timeentry.api.ts"
 import TimeentryForm from "./timeentry.form.tsx"
 
 const initialValues = {
-  project_id: null,
-  team_id: null,
+  project_id: "",
+  task_id: "",
   summary: "",
   total_time: "",
 }
@@ -35,13 +35,19 @@ const Home = () => {
     setArrWeekDays(arrWeek)
   }, [currentDate])
 
-  const { data: timeEntries = [] } = useGetTimeEntryByDate(currentDate)
+  const { data: timeEntries = [], refetch: refetchTimeEntries } =
+    useGetTimeEntryByDate(currentDate)
 
   const addBtnClicked = () => {
     setFormAddInitialValues({
       ...initialValues,
     })
     document.getElementById("modal_create").showModal()
+  }
+
+  const onCreateSuccess = () => {
+    document.getElementById("modal_create").close()
+    refetchTimeEntries()
   }
 
   return (
@@ -109,7 +115,17 @@ const Home = () => {
       <dialog id="modal_create" className="modal">
         <div className="modal-box md:w-5/12 max-w-5xl">
           <h3 className="font-bold text-lg">Time Entry</h3>
-          <TimeentryForm />
+          <form method="dialog">
+            {/* if there is a button in form, it will close the modal */}
+            <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
+              ✕
+            </button>
+          </form>
+          <TimeentryForm
+            instanceData={formAddInitialValues}
+            date={currentDate}
+            onCreateSuccess={onCreateSuccess}
+          />
         </div>
         <form method="dialog" className="modal-backdrop">
           <button>close</button>

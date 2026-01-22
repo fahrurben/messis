@@ -9,18 +9,33 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { timeEntrySchema } from "../../commons/types.ts"
 import InputTextField from "../../components/form/inputtext.field.tsx"
 import InputText from "../../components/form/inputtext.element.tsx"
-import { useGetAllProjects } from "../../hooks/use-project.api.ts"
+import {
+  useCreateProject,
+  useGetAllProjects,
+} from "../../hooks/use-project.api.ts"
 import Select from "../../components/form/select.element.tsx"
 import TextArea from "../../components/form/textarea.element.tsx"
 import InputMask from "../../components/form/inputtime.element.tsx"
 import InputTime from "../../components/form/inputtime.element.tsx"
+import { toast } from "react-toastify"
+import { useCreateTimeEntry } from "../../hooks/use-timeentry.api.ts"
+import moment from "moment/moment"
+import { strTimeToSeconds } from "../../helpers/time.helper.ts"
+import { useEffect } from "react"
 
 interface ProjectFormProps {
   id?: number
+  currentDate?: Date
   instanceData?: unknown
+  onCreateSuccess: () => void
 }
 
-const TimeEntryForm = ({ id, instanceData }: ProjectFormProps) => {
+const TimeEntryForm = ({
+  id,
+  currentDate,
+  onCreateSuccess,
+  instanceData,
+}: ProjectFormProps) => {
   const {
     register,
     formState: { errors },
@@ -31,14 +46,21 @@ const TimeEntryForm = ({ id, instanceData }: ProjectFormProps) => {
   } = useForm<TimeEntryValue>({
     resolver: zodResolver(timeEntrySchema),
     defaultValues: {
-      project_id: null,
-      team_id: null,
+      project_id: "",
+      task_id: "",
       summary: "",
       total_time: "",
     },
   })
 
+  useEffect(() => {
+    if (instanceData) {
+      reset({ ...instanceData })
+    }
+  }, [instanceData])
+
   const { data: { results: projects } = {} } = useGetAllProjects("")
+
   const projectOptions: SelectOptionType[] = projects?.map(
     (project: ProjectType) => ({
       value: project.id.toString(),
@@ -61,9 +83,24 @@ const TimeEntryForm = ({ id, instanceData }: ProjectFormProps) => {
     }))
   }
 
+  const createMutation = useCreateTimeEntry({
+    onSuccess: () => {
+      toast.success("Create new time entry")
+      onCreateSuccess()
+    },
+    onError: (error) => {
+      console.log(error)
+    },
+  })
+
   const onSubmit = (values: TimeEntryValue) => {
-    console.log(values)
+    const formData: Record<string, unknown> = { ...values }
+    formData.entry_at = moment(currentDate).format("YYYY-MM-DD")
+    formData.total_seconds = strTimeToSeconds(values.total_time)
+    createMutation.mutate(formData)
   }
+
+  console.log(errors)
 
   return (
     <div className="w-full">
@@ -125,7 +162,7 @@ const TimeEntryForm = ({ id, instanceData }: ProjectFormProps) => {
             >
               <div className="w-full">
                 <InputTime
-                  placeholder={"End Date"}
+                  placeholder={"00:00"}
                   type="text"
                   control={register("total_time")}
                   error={errors?.total_time}

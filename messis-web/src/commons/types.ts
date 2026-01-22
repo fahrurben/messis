@@ -100,8 +100,12 @@ export type ProjectType = {
 }
 
 export const timeEntrySchema = z.object({
-  project_id: z.coerce.number<number>().nullable(),
-  task_id: z.coerce.number<number>().nullable(),
+  project_id: z.coerce
+    .number<number>()
+    .min(1, { message: "This field is required" }),
+  task_id: z.coerce
+    .number<number>()
+    .min(1, { message: "This field is required" }),
   summary: z.string(),
   total_time: z.string(),
 })

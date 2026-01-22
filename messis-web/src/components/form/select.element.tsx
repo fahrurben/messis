@@ -15,7 +15,7 @@ const Select = ({
   return (
     <div className="w-full">
       <select className="select" {...control}>
-        <option>{placeholder}</option>
+        <option value="">{placeholder}</option>
         {options?.map((option) => (
           <option key={option.value} value={option.value}>
             {option.label}
