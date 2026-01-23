@@ -45,4 +45,44 @@ const useCreateTimeEntry = ({
   })
 }
 
-export { useGetTimeEntryByDate, useCreateTimeEntry }
+const useUpdateTimeEntry = ({
+  onSuccess,
+  onError,
+}: {
+  onSuccess: OnSuccessCallback
+  onError: OnErrorCallback
+}) => {
+  return useMutation({
+    mutationFn: ({ id, formData }) => {
+      console.log(formData)
+      const url = `${API_URL}/time-entries/${id}`
+      return axios.patch(url, formData)
+    },
+    onSuccess: (data) => {
+      onSuccess?.(data)
+    },
+    onError: (error) => {
+      onError?.(error)
+    },
+  })
+}
+
+const useGetTimeEntry = (id: number | null) => {
+  return useQuery({
+    queryKey: ["time_entry"],
+    queryFn: async () => {
+      const url = `${API_URL}/time-entries/${id}`
+
+      const response = await axios.get(url)
+      return response.data
+    },
+    enabled: !!id,
+  })
+}
+
+export {
+  useGetTimeEntryByDate,
+  useCreateTimeEntry,
+  useGetTimeEntry,
+  useUpdateTimeEntry,
+}

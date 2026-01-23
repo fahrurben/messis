@@ -17,7 +17,7 @@ class TimeEntrySerializer(serializers.ModelSerializer[TimeEntry]):
     class Meta:
         model = TimeEntry
         fields = (
-        'id', 'project_id', 'project', 'team_id', 'team', 'task_id', 'task', 'summary', 'entry_at', 'total_seconds', 'total_time_in_string')
+        'id', 'project_id', 'project', 'team_id', 'team', 'task_id', 'task', 'summary', 'entry_at', 'total_seconds', 'total_time')
 
     def create(self, validated_data):
         current_user = self.context['user']

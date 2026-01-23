@@ -18,7 +18,11 @@ import TextArea from "../../components/form/textarea.element.tsx"
 import InputMask from "../../components/form/inputtime.element.tsx"
 import InputTime from "../../components/form/inputtime.element.tsx"
 import { toast } from "react-toastify"
-import { useCreateTimeEntry } from "../../hooks/use-timeentry.api.ts"
+import {
+  useCreateTimeEntry,
+  useGetTimeEntry,
+  useUpdateTimeEntry,
+} from "../../hooks/use-timeentry.api.ts"
 import moment from "moment/moment"
 import { strTimeToSeconds } from "../../helpers/time.helper.ts"
 import { useEffect } from "react"
@@ -34,20 +38,18 @@ const TimeEntryForm = ({
   id,
   currentDate,
   onCreateSuccess,
+  onUpdateSuccess,
   instanceData,
 }: ProjectFormProps) => {
   const {
     register,
     formState: { errors },
-    getValues,
     reset,
     control,
     handleSubmit,
   } = useForm<TimeEntryValue>({
     resolver: zodResolver(timeEntrySchema),
     defaultValues: {
-      project_id: "",
-      task_id: "",
       summary: "",
       total_time: "",
     },
@@ -93,14 +95,27 @@ const TimeEntryForm = ({
     },
   })
 
+  const updateMutation = useUpdateTimeEntry({
+    onSuccess: () => {
+      toast.success("Time entry updated")
+      onUpdateSuccess()
+    },
+    onError: (error) => {
+      console.log(error)
+    },
+  })
+
   const onSubmit = (values: TimeEntryValue) => {
     const formData: Record<string, unknown> = { ...values }
     formData.entry_at = moment(currentDate).format("YYYY-MM-DD")
     formData.total_seconds = strTimeToSeconds(values.total_time)
-    createMutation.mutate(formData)
-  }
 
-  console.log(errors)
+    if (id) {
+      updateMutation.mutate({ id, formData })
+    } else {
+      createMutation.mutate(formData)
+    }
+  }
 
   return (
     <div className="w-full">

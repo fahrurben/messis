@@ -4,8 +4,12 @@ import { useNavigate } from "react-router"
 import { useEffect, useState } from "react"
 import moment from "moment/moment"
 import cn from "../../helpers/cn.ts"
-import { useGetTimeEntryByDate } from "../../hooks/use-timeentry.api.ts"
+import {
+  useGetTimeEntry,
+  useGetTimeEntryByDate,
+} from "../../hooks/use-timeentry.api.ts"
 import TimeentryForm from "./timeentry.form.tsx"
+import LoadingWrapper from "../../components/common/loading.wrapper.tsx"
 
 const initialValues = {
   project_id: "",
@@ -16,12 +20,12 @@ const initialValues = {
 
 const Home = () => {
   useAuthenticated()
-  const navigate = useNavigate()
   const [currentDate, setCurrentDate] = useState(new Date())
   const [arrWeekDays, setArrWeekDays] = useState([])
   const [formAddInitialValues, setFormAddInitialValues] = useState({
     ...initialValues,
   })
+  const [selectedId, setSelectedId] = useState<number | null>(null)
 
   useEffect(() => {
     let arrWeek = []
@@ -35,8 +39,14 @@ const Home = () => {
     setArrWeekDays(arrWeek)
   }, [currentDate])
 
-  const { data: timeEntries = [], refetch: refetchTimeEntries } =
-    useGetTimeEntryByDate(currentDate)
+  const {
+    data: timeEntries = [],
+    refetch: refetchTimeEntries,
+    isLoading: isLoadingGetTimeEntries,
+  } = useGetTimeEntryByDate(currentDate)
+
+  const { data: selectedData, isLoading: isLoadingGetTimeEntry } =
+    useGetTimeEntry(selectedId)
 
   const addBtnClicked = () => {
     setFormAddInitialValues({
@@ -45,13 +55,26 @@ const Home = () => {
     document.getElementById("modal_create").showModal()
   }
 
+  const editBtnClicked = (id) => {
+    setSelectedId(id)
+    document.getElementById("modal_edit").showModal()
+  }
+
   const onCreateSuccess = () => {
     document.getElementById("modal_create").close()
     refetchTimeEntries()
   }
 
+  const onUpdateSuccess = () => {
+    document.getElementById("modal_edit").close()
+    refetchTimeEntries()
+  }
+
+  const isLoading = isLoadingGetTimeEntries || isLoadingGetTimeEntry
+
   return (
     <div>
+      {isLoading && <LoadingWrapper />}
       <div className="flex">
         <h1 className="text-xl font-bold mr-auto">
           {moment(currentDate).format("dddd, D MMM")}
@@ -98,11 +121,14 @@ const Home = () => {
                   </div>
                   <div className="flex flex-0 items-center">
                     <span className="w-full py-1 font-bold text-xl">
-                      {timeEntry.total_time_in_string}
+                      {timeEntry.total_time}
                     </span>
                   </div>
                   <div className="flex flex-0 items-center">
-                    <a className="btn">
+                    <a
+                      className="btn"
+                      onClick={() => editBtnClicked(timeEntry.id)}
+                    >
                       <PencilIcon className="size-6" />
                       Edit
                     </a>
@@ -125,6 +151,28 @@ const Home = () => {
             instanceData={formAddInitialValues}
             date={currentDate}
             onCreateSuccess={onCreateSuccess}
+          />
+        </div>
+        <form method="dialog" className="modal-backdrop">
+          <button>close</button>
+        </form>
+      </dialog>
+
+      <dialog id="modal_edit" className="modal">
+        <div className="modal-box md:w-5/12 max-w-5xl">
+          <h3 className="font-bold text-lg">Time Entry</h3>
+          <form method="dialog">
+            {/* if there is a button in form, it will close the modal */}
+            <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
+              ✕
+            </button>
+          </form>
+          <TimeentryForm
+            id={selectedId}
+            instanceData={selectedData}
+            date={currentDate}
+            onCreateSuccess={onCreateSuccess}
+            onUpdateSuccess={onUpdateSuccess}
           />
         </div>
         <form method="dialog" className="modal-backdrop">
