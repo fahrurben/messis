@@ -75,6 +75,7 @@ class ProjectSerializer(serializers.ModelSerializer[Project]):
         instance.description = validated_data.get('description')
         instance.is_billable = validated_data.get('is_billable')
         instance.is_active = validated_data.get('is_active')
+        instance.save()
 
         # Update tasks
         existing_task_ids = instance.tasks.all().values_list('id', flat=True)

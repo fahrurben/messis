@@ -1,5 +1,11 @@
 import useAuthenticated from "../../hooks/use-authenticated.hook.ts"
-import { PlusIcon, PencilIcon, TrashIcon } from "@heroicons/react/24/solid"
+import {
+  PlusIcon,
+  PencilIcon,
+  TrashIcon,
+  PlayIcon,
+  PauseIcon,
+} from "@heroicons/react/24/solid"
 import { useNavigate } from "react-router"
 import { useEffect, useState } from "react"
 import moment from "moment/moment"
@@ -8,11 +14,14 @@ import {
   useDeleteTimeEntry,
   useGetTimeEntry,
   useGetTimeEntryByDate,
+  useUpdateTimeEntry,
 } from "../../hooks/use-timeentry.api.ts"
 import TimeentryForm from "./timeentry.form.tsx"
 import LoadingWrapper from "../../components/common/loading.wrapper.tsx"
 import { toast } from "react-toastify"
 import { confirmAlert } from "react-confirm-alert"
+import { secondsToTime } from "../../helpers/time.helper.ts"
+import { timeEntrySchema } from "../../commons/types.ts"
 
 const initialValues = {
   project_id: "",
@@ -29,6 +38,8 @@ const Home = () => {
     ...initialValues,
   })
   const [selectedId, setSelectedId] = useState<number | null>(null)
+  const [timeEntryStatuses, setTimeEntryStatuses] = useState({})
+  const [totalSecondEntries, setTotalSecondEntries] = useState({})
 
   useEffect(() => {
     let arrWeek = []
@@ -101,6 +112,52 @@ const Home = () => {
     })
   }
 
+  useEffect(() => {
+    let arrTotalSeconds = {}
+    let arrStatuses = {}
+    for (let timeEntry of timeEntries) {
+      arrTotalSeconds[timeEntry.id] = timeEntry.total_seconds
+      arrStatuses[timeEntry.id] = false
+    }
+    setTotalSecondEntries({ ...arrTotalSeconds })
+    setTimeEntryStatuses({ ...arrStatuses })
+  }, [timeEntries])
+
+  const updateMutation = useUpdateTimeEntry({
+    onSuccess: () => {},
+    onError: (error) => {
+      console.log(error)
+    },
+  })
+
+  const playBtnClicked = (id) => {
+    if (timeEntryStatuses[id]) {
+      clearInterval(timeEntryStatuses[id])
+      setTimeEntryStatuses((prevStatuses) => {
+        prevStatuses[id] = false
+        return { ...prevStatuses }
+      })
+
+      const timeEntry = timeEntries.find((timeEntry) => timeEntry.id === id)
+      timeEntry.total_seconds = totalSecondEntries[id]
+      console.log(timeEntry)
+      updateMutation.mutate({ id, formData: { ...timeEntry } })
+    } else {
+      const intervalId = setInterval(() => {
+        setTotalSecondEntries((prevEntries) => {
+          console.log(prevEntries)
+          prevEntries[id] = prevEntries[id] + 1
+          return { ...prevEntries }
+        })
+      }, 1000) // 1000 milliseconds = 1 second
+
+      setTimeEntryStatuses((prevStatuses) => {
+        prevStatuses[id] = intervalId
+        return { ...prevStatuses }
+      })
+    }
+  }
+
   const isLoading = isLoadingGetTimeEntries || isLoadingGetTimeEntry
 
   return (
@@ -152,10 +209,21 @@ const Home = () => {
                   </div>
                   <div className="flex flex-0 items-center">
                     <span className="w-full py-1 font-bold text-xl">
-                      {timeEntry.total_time}
+                      {secondsToTime(totalSecondEntries[timeEntry.id])}
                     </span>
                   </div>
-                  <div className="flex flex-0 items-center">
+                  <div className="flex flex-0 items-center gap-2">
+                    <a
+                      className="btn"
+                      onClick={() => playBtnClicked(timeEntry.id)}
+                    >
+                      {timeEntryStatuses[timeEntry.id] ? (
+                        <PauseIcon className="size-6" />
+                      ) : (
+                        <PlayIcon className="size-6" />
+                      )}
+                    </a>
+
                     <a
                       className="btn"
                       onClick={() => editBtnClicked(timeEntry.id)}
@@ -164,7 +232,7 @@ const Home = () => {
                     </a>
 
                     <a
-                      className="btn ml-2"
+                      className="btn"
                       onClick={() => handleDeleteBtn(timeEntry.id)}
                     >
                       <TrashIcon className="size-6" />

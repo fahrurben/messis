@@ -6,8 +6,8 @@ const MainLayout = () => {
   const navigate = useNavigate()
 
   const logoutHandle = () => {
+    navigate("/login")
     authActions.removeToken()
-    navigate("/")
   }
 
   return (
@@ -22,7 +22,7 @@ const MainLayout = () => {
           <div className="flex">
             <ul className="menu menu-horizontal px-1">
               <li>
-                <a>Time Entry</a>
+                <Link to="/">Time Entry</Link>
               </li>
               <li>
                 <Link to="/projects">Project</Link>
@@ -51,7 +51,7 @@ const MainLayout = () => {
                   <Link to="/profile">Profile</Link>
                 </li>
                 <li>
-                  <a onClick={logoutHandle}>Logout</a>
+                  <button onClick={() => logoutHandle()}>Logout</button>
                 </li>
               </ul>
             </div>
