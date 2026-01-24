@@ -67,6 +67,27 @@ const useUpdateTimeEntry = ({
   })
 }
 
+const useDeleteTimeEntry = ({
+  onSuccess,
+  onError,
+}: {
+  onSuccess: OnSuccessCallback
+  onError: OnErrorCallback
+}) => {
+  return useMutation({
+    mutationFn: (id: number) => {
+      const url = `${API_URL}/time-entries/${id}`
+      return axios.delete(url)
+    },
+    onSuccess: (data) => {
+      onSuccess?.(data)
+    },
+    onError: (err) => {
+      onError?.(err)
+    },
+  })
+}
+
 const useGetTimeEntry = (id: number | null) => {
   return useQuery({
     queryKey: ["time_entry"],
@@ -85,4 +106,5 @@ export {
   useCreateTimeEntry,
   useGetTimeEntry,
   useUpdateTimeEntry,
+  useDeleteTimeEntry,
 }

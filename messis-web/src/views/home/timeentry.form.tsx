@@ -8,24 +8,21 @@ import type {
 import { zodResolver } from "@hookform/resolvers/zod"
 import { timeEntrySchema } from "../../commons/types.ts"
 import InputTextField from "../../components/form/inputtext.field.tsx"
-import InputText from "../../components/form/inputtext.element.tsx"
-import {
-  useCreateProject,
-  useGetAllProjects,
-} from "../../hooks/use-project.api.ts"
+import { useGetAllProjects } from "../../hooks/use-project.api.ts"
 import Select from "../../components/form/select.element.tsx"
 import TextArea from "../../components/form/textarea.element.tsx"
-import InputMask from "../../components/form/inputtime.element.tsx"
 import InputTime from "../../components/form/inputtime.element.tsx"
 import { toast } from "react-toastify"
 import {
   useCreateTimeEntry,
-  useGetTimeEntry,
   useUpdateTimeEntry,
+  useDeleteTimeEntry,
 } from "../../hooks/use-timeentry.api.ts"
 import moment from "moment/moment"
 import { strTimeToSeconds } from "../../helpers/time.helper.ts"
 import { useEffect } from "react"
+import { confirmAlert } from "react-confirm-alert"
+import "react-confirm-alert/src/react-confirm-alert.css"
 
 interface ProjectFormProps {
   id?: number

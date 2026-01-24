@@ -1,15 +1,18 @@
 import useAuthenticated from "../../hooks/use-authenticated.hook.ts"
-import { PlusIcon, PencilIcon } from "@heroicons/react/24/solid"
+import { PlusIcon, PencilIcon, TrashIcon } from "@heroicons/react/24/solid"
 import { useNavigate } from "react-router"
 import { useEffect, useState } from "react"
 import moment from "moment/moment"
 import cn from "../../helpers/cn.ts"
 import {
+  useDeleteTimeEntry,
   useGetTimeEntry,
   useGetTimeEntryByDate,
 } from "../../hooks/use-timeentry.api.ts"
 import TimeentryForm from "./timeentry.form.tsx"
 import LoadingWrapper from "../../components/common/loading.wrapper.tsx"
+import { toast } from "react-toastify"
+import { confirmAlert } from "react-confirm-alert"
 
 const initialValues = {
   project_id: "",
@@ -68,6 +71,34 @@ const Home = () => {
   const onUpdateSuccess = () => {
     document.getElementById("modal_edit").close()
     refetchTimeEntries()
+  }
+
+  const deleteMutation = useDeleteTimeEntry({
+    onSuccess: () => {
+      toast.success("Time entry deleted")
+      onUpdateSuccess()
+    },
+    onError: (error) => {
+      console.log(error)
+    },
+  })
+
+  const handleDeleteBtn = (id) => {
+    confirmAlert({
+      title: "Confirm to delete",
+      message: "Are you sure to delete this time entry?.",
+      buttons: [
+        {
+          label: "Yes",
+          onClick: () => {
+            deleteMutation.mutate(id)
+          },
+        },
+        {
+          label: "No",
+        },
+      ],
+    })
   }
 
   const isLoading = isLoadingGetTimeEntries || isLoadingGetTimeEntry
@@ -130,7 +161,13 @@ const Home = () => {
                       onClick={() => editBtnClicked(timeEntry.id)}
                     >
                       <PencilIcon className="size-6" />
-                      Edit
+                    </a>
+
+                    <a
+                      className="btn ml-2"
+                      onClick={() => handleDeleteBtn(timeEntry.id)}
+                    >
+                      <TrashIcon className="size-6" />
                     </a>
                   </div>
                 </div>
