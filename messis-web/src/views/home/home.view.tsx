@@ -5,6 +5,8 @@ import {
   TrashIcon,
   PlayIcon,
   PauseIcon,
+  ArrowLeftIcon,
+  ArrowRightIcon,
 } from "@heroicons/react/24/solid"
 import { useNavigate } from "react-router"
 import { useEffect, useState } from "react"
@@ -158,15 +160,38 @@ const Home = () => {
     }
   }
 
+  const nextWeekClicked = () => {
+    const nextWeekDate = moment(currentDate).clone().startOf('week').add(1, 'week').toDate()
+    console.log(nextWeekDate)
+    setCurrentDate(nextWeekDate)
+  }
+
+  const prevWeekClicked = () => {
+    const prevWeekDate = moment(currentDate).clone().startOf('week').subtract(1, 'week').toDate()
+    console.log(prevWeekDate)
+    setCurrentDate(prevWeekDate)
+  }
+
   const isLoading = isLoadingGetTimeEntries || isLoadingGetTimeEntry
 
   return (
     <div>
       {isLoading && <LoadingWrapper />}
       <div className="flex">
-        <h1 className="text-xl font-bold mr-auto">
-          {moment(currentDate).format("dddd, D MMM")}
-        </h1>
+        <div className="flex gap-2 mr-auto">
+          <h1 className="text-xl font-bold">
+            {moment(currentDate).format("dddd, D MMM")}
+          </h1>
+          <div className="flex">
+            <button className="btn" onClick={() => prevWeekClicked()}>
+              <ArrowLeftIcon className="size-6" />
+            </button>
+            <button className="btn" onClick={() => nextWeekClicked()}>
+              <ArrowRightIcon className="size-6" />
+            </button>
+          </div>
+        </div>
+
         <button className="btn" onClick={addBtnClicked}>
           <PlusIcon className="size-6" />
         </button>
