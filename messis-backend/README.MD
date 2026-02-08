@@ -5,17 +5,22 @@ free subscriptions.
 I design the application as Software as Service (SAAS). So, this application can handle
 multiple client in multi tenant.
 
+The application can running using docker
+
 ### Technology
 * Django
 * Django Rest Framework
 * SQLite
 
 ### Installation
-
 ```
-pip install -r requirements.txt
+cp .env_local .env
 
-python manage.py migrate
+Edit the .env accordingly
 
-python manage.py runserver
+docker build -t messis-backend .
+
+docker run -d -p 8000:8000 --env-file .env --name messis-backend messis-backend
+
+docker exec -it messis-backend python manage.py migrate
 ```
