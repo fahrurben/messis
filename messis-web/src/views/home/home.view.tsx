@@ -61,8 +61,7 @@ const Home = () => {
     isLoading: isLoadingGetTimeEntries,
   } = useGetTimeEntryByDate(currentDate)
 
-  const { data: selectedData, isLoading: isLoadingGetTimeEntry } =
-    useGetTimeEntry(selectedId)
+  const { data: selectedData, isLoading: isLoadingGetTimeEntry, refetch: refetchTimeEntry } = useGetTimeEntry(selectedId)
 
   const addBtnClicked = () => {
     setFormAddInitialValues({
@@ -71,7 +70,10 @@ const Home = () => {
     document.getElementById("modal_create").showModal()
   }
 
-  const editBtnClicked = (id) => {
+  const editBtnClicked = async (id) =>  {
+    if (id == selectedId) {
+     await refetchTimeEntry()
+    }
     setSelectedId(id)
     document.getElementById("modal_edit").showModal()
   }

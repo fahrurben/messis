@@ -15,7 +15,8 @@ class TimeEntry(models.Model):
     def total_time(self):
         total_hour =  int(self.total_seconds / 3600)
         total_minutes = int(self.total_seconds / 60)
+        total_seconds = int(self.total_seconds % 60)
         total_minutes_in_string = "0" if total_minutes == 60 or total_minutes == 0 else total_minutes
-        total_time = f"{total_hour:02}:{total_minutes_in_string:02}"
+        total_time = f"{total_hour:02}:{total_minutes_in_string:02}:{total_seconds:02}"
         return total_time
 

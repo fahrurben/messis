@@ -90,7 +90,7 @@ const useDeleteTimeEntry = ({
 
 const useGetTimeEntry = (id: number | null) => {
   return useQuery({
-    queryKey: ["time_entry"],
+    queryKey: ["time_entry", id],
     queryFn: async () => {
       const url = `${API_URL}/time-entries/${id}`
 

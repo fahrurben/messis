@@ -18,7 +18,7 @@ const InputTime = ({
   return (
     <InputMask
       type={type}
-      mask="__:__"
+      mask="__:__:__"
       replacement={{ _: /\d/ }}
       className={cn("input", { "input-error": error }, "w-full")}
       placeholder={placeholder}

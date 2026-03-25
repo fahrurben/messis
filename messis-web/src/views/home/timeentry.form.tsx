@@ -174,7 +174,7 @@ const TimeEntryForm = ({
             >
               <div className="w-full">
                 <InputTime
-                  placeholder={"00:00"}
+                  placeholder={"00:00:00"}
                   type="text"
                   control={register("total_time")}
                   error={errors?.total_time}
