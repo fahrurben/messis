@@ -12,7 +12,7 @@ class RegisterSerializer(serializers.Serializer[Any]):
     password = serializers.CharField(max_length=50)
     firstname = serializers.CharField(max_length=255)
     lastname = serializers.CharField(max_length=255)
-    timezone = serializers.CharField(max_length=50)
+    timezone = serializers.CharField(max_length=50, required=False)
 
     def validate_company_name(self, value):
         is_exists = Company.objects.filter(name__iexact=value).exists()

@@ -111,3 +111,13 @@ export const timeEntrySchema = z.object({
 })
 
 export type TimeEntryValue = z.infer<typeof timeEntrySchema>
+
+export const registerSchema = z.object({
+  email: z.string().email(),
+  password: z.string().min(6),
+  firstname: z.string(),
+  lastname: z.string(),
+  company_name: z.string().min(3),
+})
+
+export type RegisterFormValue = z.infer<typeof registerSchema>

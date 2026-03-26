@@ -104,7 +104,11 @@ const Login = () => {
             </InputTextField>
           </fieldset>
 
-          <button className="btn btn-neutral mt-4">Login</button>
+          <div className="flex justify-between">
+            <a onClick={() => navigate('/register')} className="btn mt-4">Register</a>
+            <button className="btn btn-neutral mt-4">Login</button>
+          </div>
+
         </form>
       </fieldset>
     </div>

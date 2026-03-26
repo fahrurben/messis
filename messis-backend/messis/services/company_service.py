@@ -10,7 +10,7 @@ class CompanyService:
     def register(self, validated_data: Dict[Any, Any]) -> CustomUser:
         company = Company()
         company.name = str(validated_data.get('company_name'))
-        company.timezone = str(validated_data.get('timezone'))
+        company.timezone = "Asia/Jakarta"
         company.status = Company.Status.TRIAL
         company.subdomain = slugify(company.name)
         company.save()

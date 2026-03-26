@@ -7,12 +7,14 @@ import ProfileView from "../views/profile/profile.view.tsx"
 import ProjectlistView from "../views/project/projectlist.view.tsx"
 import ProjectCreateView from "../views/project/projectcreate.view.tsx"
 import ProjectEditView from "../views/project/projectedit.view.tsx"
+import Register from "../views/register/register.view.tsx";
 
 const routeConfig = createBrowserRouter([
   {
     element: <RootLayout />,
     children: [
       { path: "/login", element: <Login /> },
+      { path: "/register", element: <Register /> },
       {
         path: "/",
         element: <MainLayout />,
