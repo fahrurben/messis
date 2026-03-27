@@ -3,7 +3,7 @@ from typing import Dict, Any
 from messis.models import Company, CustomUser, UserProfile, UserRole
 from django.contrib.auth.models import Group
 from django.utils.text import slugify
-
+from django.core.mail import send_mail
 
 class CompanyService:
 
@@ -31,5 +31,20 @@ class CompanyService:
         profile.firstname = str(validated_data.get('firstname'))
         profile.lastname = str(validated_data.get('lastname'))
         profile.save()
+
+        welcome_messages = f"""
+            Your registration to messis is success
+            Please login with your email, password, and subdomain ({company.subdomain})
+            
+            Best Regards
+        """
+
+        send_mail(
+            'Welcome to messis',
+            welcome_messages,
+            'cs@messis.com',
+            [user.email],
+            fail_silently=False,
+        )
 
         return user

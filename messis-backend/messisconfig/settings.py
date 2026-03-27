@@ -151,3 +151,14 @@ SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(hours=int(os.getenv("JWT_MAX_LIFETIME", 1))),
     "REFRESH_TOKEN_LIFETIME": timedelta(hours=int(os.getenv("JWT_MAX_LIFETIME", 1))),
 }
+
+if DEBUG:
+    EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
+    EMAIL_FILE_PATH = 'tmp/app-messages'  # Create this folder first
+else:
+    EMAIL_BACKEND = os.getenv("EMAIL_BACKEND")
+    EMAIL_HOST = os.getenv("EMAIL_HOST")
+    EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
+    EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
+    EMAIL_PORT = os.getenv("EMAIL_PORT")
+    EMAIL_USE_SSL = os.getenv("EMAIL_USE_SSL")
