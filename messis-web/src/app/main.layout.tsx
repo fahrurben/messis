@@ -28,6 +28,9 @@ const MainLayout = () => {
                 <Link to="/projects">Project</Link>
               </li>
               <li>
+                <Link to="/report">Report</Link>
+              </li>
+              <li>
                 <a>Teams</a>
               </li>
             </ul>

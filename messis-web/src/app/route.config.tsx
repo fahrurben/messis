@@ -8,6 +8,7 @@ import ProjectlistView from "../views/project/projectlist.view.tsx"
 import ProjectCreateView from "../views/project/projectcreate.view.tsx"
 import ProjectEditView from "../views/project/projectedit.view.tsx"
 import Register from "../views/register/register.view.tsx";
+import ReportView from "../views/report/report.view.tsx";
 
 const routeConfig = createBrowserRouter([
   {
@@ -24,6 +25,7 @@ const routeConfig = createBrowserRouter([
           { path: "/projects", element: <ProjectlistView /> },
           { path: "/projects/create", element: <ProjectCreateView /> },
           { path: "/projects/edit/:id", element: <ProjectEditView /> },
+          { path: "/report", element: <ReportView /> },
         ],
       },
     ],
