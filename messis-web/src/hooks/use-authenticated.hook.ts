@@ -11,23 +11,18 @@ const useAuthenticated = () => {
   const location = useLocation()
   const navigate = useNavigate()
 
-  const { authToken, authExpiredAt } = useSnapshot(authStore)
-
-  let now = new Date().getTime()
+  const { authToken } = useSnapshot(authStore)
 
   useEffect(() => {
     axios.defaults.headers.common["Authorization"] = "Bearer " + authToken
 
-    if (
-      (authToken === null || now > authExpiredAt) &&
-      !NOT_SECURED_ROUTES.includes(location.pathname)
-    ) {
+    if (authToken === null && !NOT_SECURED_ROUTES.includes(location.pathname)) {
       navigate("/login")
     }
   }, [])
 
   return {
-    isAuthenticated: !!authToken && now < authExpiredAt,
+    isAuthenticated: !!authToken,
   }
 }
 

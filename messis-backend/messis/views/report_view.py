@@ -40,7 +40,7 @@ class ReportView(viewsets.ViewSet):
             summary_dict.append({
                 'user_details': profile_serializer.to_representation(instance=user.userprofile),
                 'entries': entries,
-                'total_seconds_summary': TimeEntry.total_seconds_to_time(total_seconds_summary),
+                'total_time_summary': TimeEntry.total_seconds_to_time(total_seconds_summary),
             })
 
         return Response(summary_dict)
