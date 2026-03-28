@@ -31,11 +31,14 @@ from messis.views import TimeEntryView
 from messis.views.auth_view import authenticate
 from rest_framework.routers import SimpleRouter
 
+from messis.views.report_view import ReportView
+
 router = SimpleRouter(trailing_slash=False)
 router.register(r'user-profiles', UserProfileView, basename='userprofile')
 router.register(r'projects', ProjectView, basename='project')
 router.register(r'teams', TeamView, basename='team')
 router.register(r'time-entries', TimeEntryView, basename='timeentry')
+router.register(r'report', ReportView, basename='report')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
