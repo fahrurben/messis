@@ -10,9 +10,13 @@ import useAuthenticated from "../../hooks/use-authenticated.hook.ts"
 import type { ProjectType } from "../../commons/types.ts"
 
 const ProjectlistView = () => {
-  useAuthenticated()
-
   const navigate = useNavigate()
+  const {isAuthenticated} = useAuthenticated()
+
+  if (!isAuthenticated) {
+    navigate("/login")
+  }
+
   const { data: { results: projects } = {}, refetch } = useGetAllProjects("")
 
   const [selectedProject, setSelectedProject] = useState<ProjectType>()

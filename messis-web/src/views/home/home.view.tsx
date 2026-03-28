@@ -33,7 +33,13 @@ const initialValues = {
 }
 
 const Home = () => {
-  useAuthenticated()
+  const navigate = useNavigate()
+  const {isAuthenticated} = useAuthenticated()
+
+  if (!isAuthenticated) {
+    navigate("/login")
+  }
+
   const [currentDate, setCurrentDate] = useState(new Date())
   const [arrWeekDays, setArrWeekDays] = useState([])
   const [formAddInitialValues, setFormAddInitialValues] = useState({

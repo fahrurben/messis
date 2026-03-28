@@ -10,6 +10,7 @@ import { useSnapshot } from "valtio/react"
 import { useEffect } from "react"
 import { show_form_error_message } from "../../helpers/form.helper.ts"
 import useAuthenticated from "../../hooks/use-authenticated.hook.ts"
+import {useNavigate} from "react-router";
 
 const formSchema = z.object({
   firstname: z.string().min(3),
@@ -23,7 +24,12 @@ const formSchema = z.object({
 type FormValues = z.infer<typeof formSchema>
 
 const ProfileView = () => {
-  useAuthenticated()
+  const navigate = useNavigate()
+  const {isAuthenticated} = useAuthenticated()
+
+  if (!isAuthenticated) {
+    navigate("/login")
+  }
 
   const { userId } = useSnapshot(authStore)
 
