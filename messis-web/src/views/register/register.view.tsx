@@ -1,4 +1,4 @@
-import { type SubmitHandler, useForm } from "react-hook-form"
+import { type SubmitHandler, useForm, useWatch} from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
 import {useNavigate} from "react-router";
@@ -10,16 +10,30 @@ import {useLogin} from "../login/use-login.hook.ts";
 import {actions as authActions} from "../../stores/auth.store.ts";
 import {useRegister} from "../../hooks/use-register.api.ts";
 import {toast} from "react-toastify";
+import {useState} from "react";
+import slugify from "slugify";
 
 const Register = () => {
   const navigate = useNavigate()
 
   const {
     register,
+    control,
     formState: { errors },
     setError,
     handleSubmit
   } = useForm<RegisterFormValue>({resolver: zodResolver(registerSchema)})
+
+  const subdomain = useWatch({
+    control: control,
+    name: 'company_name',
+    compute: (data: string) => {
+      if (typeof data === 'string') {
+        return slugify(data).toLowerCase()
+      }
+      return data
+    },
+  })
 
   const registerMutation = useRegister({
     onError: () => {
@@ -121,6 +135,9 @@ const Register = () => {
                 required
               />
             </InputTextField>
+
+            <p><strong>Subdomain (Needed when login)</strong></p>
+            <p>{subdomain}</p>
 
           </fieldset>
 
