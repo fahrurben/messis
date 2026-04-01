@@ -32,19 +32,19 @@ class CompanyService:
         profile.lastname = str(validated_data.get('lastname'))
         profile.save()
 
-        welcome_messages = f"""
-            Your registration to messis is success
-            Please login with your email, password, and subdomain ({company.subdomain})
-            
-            Best Regards
-        """
-
-        send_mail(
-            'Welcome to messis',
-            welcome_messages,
-            'cs@messis.com',
-            [user.email],
-            fail_silently=False,
-        )
+        # welcome_messages = f"""
+        #     Your registration to messis is success
+        #     Please login with your email, password, and subdomain ({company.subdomain})
+        #
+        #     Best Regards
+        # """
+        #
+        # send_mail(
+        #     'Welcome to messis',
+        #     welcome_messages,
+        #     'cs@messis.com',
+        #     [user.email],
+        #     fail_silently=False,
+        # )
 
         return user
