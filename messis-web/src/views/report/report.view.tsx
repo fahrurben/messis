@@ -1,17 +1,13 @@
 import {useNavigate} from "react-router"
 import useAuthenticated from "../../hooks/use-authenticated.hook.ts"
 import {useEffect, useState} from "react"
-import {useGetTimeEntryByDate} from "../../hooks/use-timeentry.api.ts"
 import {useGetReportSummary} from "../../hooks/user-report.api.ts"
 import LoadingWrapper from "../../components/common/loading.wrapper.tsx"
-import moment from "moment"
-import {ArrowLeftIcon, ArrowRightIcon, PlusIcon} from "@heroicons/react/24/solid"
-import {useGetAllProjects, useGetProject} from "../../hooks/use-project.api.ts"
+import {useGetAllProjects} from "../../hooks/use-project.api.ts"
 import {useForm} from "react-hook-form"
-import type {ProjectType, SelectOptionType, TimeEntryValue} from "../../commons/types.ts"
+import type {ProjectType, SelectOptionType} from "../../commons/types.ts"
 import {zodResolver} from "@hookform/resolvers/zod"
 import { z } from "zod"
-import {timeEntrySchema} from "../../commons/types.ts"
 import InputTextField from "../../components/form/inputtext.field.tsx";
 import Select from "../../components/form/select.element.tsx";
 import InputText from "../../components/form/inputtext.element.tsx";

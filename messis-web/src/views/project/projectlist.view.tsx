@@ -8,6 +8,7 @@ import { useState } from "react"
 import { toast } from "react-toastify"
 import useAuthenticated from "../../hooks/use-authenticated.hook.ts"
 import type { ProjectType } from "../../commons/types.ts"
+import {showModal} from "../../helpers/modal.helper.ts";
 
 const ProjectlistView = () => {
   const navigate = useNavigate()
@@ -34,8 +35,7 @@ const ProjectlistView = () => {
   const deleteProjectConfirmation = (project: ProjectType) => {
     setSelectedProject(project)
 
-    // @ts-expect-error ignore
-    document.getElementById("delete_modal").showModal()
+    showModal("delete_modal")
   }
 
   const handleDeleteProject = () => {

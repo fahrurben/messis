@@ -1,16 +1,12 @@
 import { type SubmitHandler, useForm, useWatch} from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { z } from "zod"
 import {useNavigate} from "react-router";
 import {useFormState} from "react-dom";
 import InputTextField from "../../components/form/inputtext.field.tsx";
 import InputText from "../../components/form/inputtext.element.tsx";
 import {registerSchema, type RegisterFormValue} from "../../commons/types.ts";
-import {useLogin} from "../login/use-login.hook.ts";
-import {actions as authActions} from "../../stores/auth.store.ts";
 import {useRegister} from "../../hooks/use-register.api.ts";
 import {toast} from "react-toastify";
-import {useState} from "react";
 import slugify from "slugify";
 
 const Register = () => {

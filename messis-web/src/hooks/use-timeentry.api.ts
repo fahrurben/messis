@@ -2,12 +2,12 @@ import axios from "axios"
 import { API_URL } from "../helpers/constant.js"
 import { useMutation, useQuery } from "@tanstack/react-query"
 import moment from "moment/moment"
-import type { OnErrorCallback, OnSuccessCallback } from "../commons/types.ts"
+import type { OnErrorCallback, OnSuccessCallback, TimeEntryValue} from "../commons/types.ts"
 
-const useGetTimeEntryByDate = (date = null) => {
-  return useQuery({
+const useGetTimeEntryByDate = (date:Date | null = null) => {
+  return useQuery<TimeEntryValue[]>({
     queryKey: ["time_entries", date],
-    queryFn: async () => {
+    queryFn: async (): Promise<TimeEntryValue[]> => {
       const url = `${API_URL}/time-entries/get_entry_by_date`
 
       const params: Record<string, string> = {}
@@ -53,7 +53,7 @@ const useUpdateTimeEntry = ({
   onError: OnErrorCallback
 }) => {
   return useMutation({
-    mutationFn: ({ id, formData }) => {
+    mutationFn: ({ id, formData }: any) => {
       console.log(formData)
       const url = `${API_URL}/time-entries/${id}`
       return axios.patch(url, formData)

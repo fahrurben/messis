@@ -1,6 +1,5 @@
 import { useForm, useWatch } from "react-hook-form"
 import type {
-  ProjectFormValue,
   ProjectType,
   SelectOptionType,
   TimeEntryValue,
@@ -16,12 +15,10 @@ import { toast } from "react-toastify"
 import {
   useCreateTimeEntry,
   useUpdateTimeEntry,
-  useDeleteTimeEntry,
 } from "../../hooks/use-timeentry.api.ts"
 import moment from "moment/moment"
 import { strTimeToSeconds } from "../../helpers/time.helper.ts"
 import { useEffect } from "react"
-import { confirmAlert } from "react-confirm-alert"
 import "react-confirm-alert/src/react-confirm-alert.css"
 
 interface ProjectFormProps {

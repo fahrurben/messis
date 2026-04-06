@@ -2,11 +2,14 @@ import { proxy, subscribe } from "valtio"
 import { TOKEN_EXPIRATION_HOUR } from "../helpers/constant.js"
 import axios from "axios"
 import { jwtDecode } from "jwt-decode"
+import type {TokenPayloadType} from "../commons/types.ts";
 
 
 const getInitialState = () => {
 
-  const initialState = JSON.parse(localStorage.getItem("auth")) || {
+  const authData = localStorage.getItem("auth") || ""
+
+  const initialState = JSON.parse(authData) || {
     user: {},
     authToken: null,
     companyId: null,
@@ -27,7 +30,7 @@ subscribe(store, () => {
 
 const actions = {
   setToken: (token: string) => {
-    const decoded = jwtDecode(token)
+    const decoded = jwtDecode<TokenPayloadType>(token)
     store.authToken = token
     store.companyId = decoded.company_id
     store.userId = decoded.user_id

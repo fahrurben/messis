@@ -23,7 +23,7 @@ import LoadingWrapper from "../../components/common/loading.wrapper.tsx"
 import { toast } from "react-toastify"
 import { confirmAlert } from "react-confirm-alert"
 import { secondsToTime } from "../../helpers/time.helper.ts"
-import { timeEntrySchema } from "../../commons/types.ts"
+import {showModal, closeModal} from "../../helpers/modal.helper.ts"
 
 const initialValues = {
   project_id: "",
@@ -40,14 +40,14 @@ const Home = () => {
     navigate("/login")
   }
 
-  const [currentDate, setCurrentDate] = useState(new Date())
-  const [arrWeekDays, setArrWeekDays] = useState([])
+  const [currentDate, setCurrentDate] = useState<Date>(new Date())
+  const [arrWeekDays, setArrWeekDays] = useState<Date[]>([])
   const [formAddInitialValues, setFormAddInitialValues] = useState({
     ...initialValues,
   })
   const [selectedId, setSelectedId] = useState<number | null>(null)
-  const [timeEntryStatuses, setTimeEntryStatuses] = useState({})
-  const [totalSecondEntries, setTotalSecondEntries] = useState({})
+  const [timeEntryStatuses, setTimeEntryStatuses] = useState<Record<number, number>>({})
+  const [totalSecondEntries, setTotalSecondEntries] = useState<Record<number, number>>({})
 
   useEffect(() => {
     let arrWeek = []
@@ -73,24 +73,24 @@ const Home = () => {
     setFormAddInitialValues({
       ...initialValues,
     })
-    document.getElementById("modal_create").showModal()
+    showModal("modal_create")
   }
 
-  const editBtnClicked = async (id) =>  {
-    if (id == selectedId) {
+  const editBtnClicked = async (id: number) =>  {
+    if (id === selectedId) {
      await refetchTimeEntry()
     }
     setSelectedId(id)
-    document.getElementById("modal_edit").showModal()
+    showModal("modal_edit")
   }
 
   const onCreateSuccess = () => {
-    document.getElementById("modal_create").close()
+    closeModal("modal_create")
     refetchTimeEntries()
   }
 
   const onUpdateSuccess = () => {
-    document.getElementById("modal_edit").close()
+    closeModal("modal_edit")
     refetchTimeEntries()
   }
 
@@ -104,7 +104,7 @@ const Home = () => {
     },
   })
 
-  const handleDeleteBtn = (id) => {
+  const handleDeleteBtn = (id: number) => {
     confirmAlert({
       title: "Confirm to delete",
       message: "Are you sure to delete this time entry?.",
@@ -123,11 +123,11 @@ const Home = () => {
   }
 
   useEffect(() => {
-    let arrTotalSeconds = {}
-    let arrStatuses = {}
+    let arrTotalSeconds: Record<string, number> = {}
+    let arrStatuses: Record<string, number> = {}
     for (let timeEntry of timeEntries) {
       arrTotalSeconds[timeEntry.id] = timeEntry.total_seconds
-      arrStatuses[timeEntry.id] = false
+      arrStatuses[timeEntry.id] = 0
     }
     setTotalSecondEntries({ ...arrTotalSeconds })
     setTimeEntryStatuses({ ...arrStatuses })
@@ -140,22 +140,20 @@ const Home = () => {
     },
   })
 
-  const playBtnClicked = (id) => {
+  const playBtnClicked = (id: number) => {
     if (timeEntryStatuses[id]) {
       clearInterval(timeEntryStatuses[id])
       setTimeEntryStatuses((prevStatuses) => {
-        prevStatuses[id] = false
+        prevStatuses[id] = 0
         return { ...prevStatuses }
       })
 
       const timeEntry = timeEntries.find((timeEntry) => timeEntry.id === id)
       timeEntry.total_seconds = totalSecondEntries[id]
-      console.log(timeEntry)
       updateMutation.mutate({ id, formData: { ...timeEntry } })
     } else {
       const intervalId = setInterval(() => {
         setTotalSecondEntries((prevEntries) => {
-          console.log(prevEntries)
           prevEntries[id] = prevEntries[id] + 1
           return { ...prevEntries }
         })

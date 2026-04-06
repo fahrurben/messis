@@ -121,3 +121,12 @@ export const registerSchema = z.object({
 })
 
 export type RegisterFormValue = z.infer<typeof registerSchema>
+
+export type TokenPayloadType = {
+  sub: string
+  role: string
+  iat: number
+  exp: number
+  company_id: number
+  user_id: number
+}

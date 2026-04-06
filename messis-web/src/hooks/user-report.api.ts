@@ -3,7 +3,7 @@ import {API_URL} from "../helpers/constant.ts";
 import axios from "axios";
 import moment from "moment";
 
-const useGetReportSummary = (project_id, from_date, to_date) => {
+const useGetReportSummary = (project_id: string, from_date: Date, to_date: Date) => {
   return useQuery({
     queryKey: ["report_summary", project_id, from_date, to_date],
     queryFn: async () => {

@@ -5,7 +5,9 @@ import { createRoot } from 'react-dom/client'
 
 import ContainerApp from './app/container.app.jsx'
 
-createRoot(document.getElementById('root')).render(
+const element: Element = document.getElementById('root') as HTMLElement
+
+createRoot(element).render(
   <StrictMode>
     <ContainerApp />
   </StrictMode>,
