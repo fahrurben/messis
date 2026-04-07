@@ -22,10 +22,11 @@ import { useEffect } from "react"
 import "react-confirm-alert/src/react-confirm-alert.css"
 
 interface ProjectFormProps {
-  id?: number
+  id: number | null
   currentDate?: Date
   instanceData?: unknown
-  onCreateSuccess: () => void
+  onCreateSuccess?: () => void
+  onUpdateSuccess?: () => void
 }
 
 const TimeEntryForm = ({
@@ -82,7 +83,9 @@ const TimeEntryForm = ({
   const createMutation = useCreateTimeEntry({
     onSuccess: () => {
       toast.success("Create new time entry")
-      onCreateSuccess()
+      if (onCreateSuccess) {
+        onCreateSuccess()
+      }
     },
     onError: (error) => {
       console.log(error)
@@ -92,7 +95,9 @@ const TimeEntryForm = ({
   const updateMutation = useUpdateTimeEntry({
     onSuccess: () => {
       toast.success("Time entry updated")
-      onUpdateSuccess()
+      if (onUpdateSuccess) {
+        onUpdateSuccess()
+      }
     },
     onError: (error) => {
       console.log(error)

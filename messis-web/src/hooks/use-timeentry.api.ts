@@ -2,12 +2,12 @@ import axios from "axios"
 import { API_URL } from "../helpers/constant.js"
 import { useMutation, useQuery } from "@tanstack/react-query"
 import moment from "moment/moment"
-import type { OnErrorCallback, OnSuccessCallback, TimeEntryValue} from "../commons/types.ts"
+import type { OnErrorCallback, OnSuccessCallback, TimeEntryDataType } from "../commons/types.ts"
 
 const useGetTimeEntryByDate = (date:Date | null = null) => {
-  return useQuery<TimeEntryValue[]>({
+  return useQuery<TimeEntryDataType[]>({
     queryKey: ["time_entries", date],
-    queryFn: async (): Promise<TimeEntryValue[]> => {
+    queryFn: async (): Promise<TimeEntryDataType[]> => {
       const url = `${API_URL}/time-entries/get_entry_by_date`
 
       const params: Record<string, string> = {}

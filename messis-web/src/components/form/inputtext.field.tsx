@@ -10,7 +10,7 @@ const InputTextField = ({
 }: {
   label: string
   name: string
-  required: boolean
+  required?: boolean
   error?: FieldError
   children: ReactNode
 }) => {

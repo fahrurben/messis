@@ -29,22 +29,24 @@ export type ErrorResponse = {
 export type OnSuccessCallback = (data: unknown) => void
 export type OnErrorCallback = (data: ErrorResponse) => void
 
+export type UserProfile = {
+  firstname: string
+  lastname: string
+  fullname: string
+  title: string
+  capacity: number
+  bill_rate: number
+  cost_rate: number
+  profile_photo: string
+}
+
 export type Team = {
   id: number
   email: string
   firstname: string
   lastname: string
   fullname: string
-  userprofile: {
-    firstname: string
-    lastname: string
-    fullname: string
-    title: string
-    capacity: number
-    bill_rate: number
-    cost_rate: number
-    profile_photo: string
-  }
+  userprofile: UserProfile
 }
 
 export type SelectOptionType = {
@@ -99,6 +101,12 @@ export type ProjectType = {
   }>
 }
 
+export type TaskType = {
+  id: number
+  name: string
+  is_billable: boolean
+}
+
 export const timeEntrySchema = z.object({
   project_id: z.coerce
     .number<number>()
@@ -111,6 +119,24 @@ export const timeEntrySchema = z.object({
 })
 
 export type TimeEntryValue = z.infer<typeof timeEntrySchema>
+
+export type TimeEntryDataType = {
+  id: number,
+  project_id: number,
+  summary: string,
+  entry_at: Date,
+  total_seconds: number,
+  total_time: string,
+  total_seconds_to_time: string,
+  project: ProjectType,
+  task: TaskType
+}
+
+export type ReportSummaryType = {
+  user_details: UserProfile
+  entries: TimeEntryDataType[]
+  total_time_summary: string
+}
 
 export const registerSchema = z.object({
   email: z.string().email(),

@@ -149,8 +149,10 @@ const Home = () => {
       })
 
       const timeEntry = timeEntries.find((timeEntry) => timeEntry.id === id)
-      timeEntry.total_seconds = totalSecondEntries[id]
-      updateMutation.mutate({ id, formData: { ...timeEntry } })
+      if (timeEntry) {
+        timeEntry.total_seconds = totalSecondEntries[id]
+        updateMutation.mutate({ id, formData: { ...timeEntry } })
+      }
     } else {
       const intervalId = setInterval(() => {
         setTotalSecondEntries((prevEntries) => {
@@ -284,8 +286,9 @@ const Home = () => {
             </button>
           </form>
           <TimeentryForm
+            id={null}
             instanceData={formAddInitialValues}
-            date={currentDate}
+            currentDate={currentDate}
             onCreateSuccess={onCreateSuccess}
           />
         </div>
@@ -306,7 +309,7 @@ const Home = () => {
           <TimeentryForm
             id={selectedId}
             instanceData={selectedData}
-            date={currentDate}
+            currentDate={currentDate}
             onCreateSuccess={onCreateSuccess}
             onUpdateSuccess={onUpdateSuccess}
           />

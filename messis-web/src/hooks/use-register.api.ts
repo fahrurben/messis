@@ -1,7 +1,7 @@
 import axios, { type AxiosResponse } from "axios"
 import { API_URL } from "../helpers/constant"
 import { useMutation, type UseMutationResult } from "@tanstack/react-query"
-import type { FormLogin, LoginResponse } from "../commons/types.ts"
+import type { LoginResponse, RegisterFormValue} from "../commons/types.ts"
 
 type UserRegisterProps = {
   onError?: (error: Error) => void
@@ -17,7 +17,7 @@ const useRegister = ({ onError, onSuccess }: UserRegisterProps) => {
   }: UseMutationResult<
     AxiosResponse<LoginResponse>,
     Error,
-    FormLogin
+    RegisterFormValue
   > = useMutation({
     mutationFn: (formData) => {
       return axios.post(`${API_URL}/register`, formData)
@@ -30,7 +30,7 @@ const useRegister = ({ onError, onSuccess }: UserRegisterProps) => {
     },
   })
 
-  const execute = (data: FormLogin) => {
+  const execute = (data: RegisterFormValue) => {
     mutate(data)
   }
 

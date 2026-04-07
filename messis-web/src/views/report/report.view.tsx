@@ -12,11 +12,13 @@ import InputTextField from "../../components/form/inputtext.field.tsx";
 import Select from "../../components/form/select.element.tsx";
 import InputText from "../../components/form/inputtext.element.tsx";
 
-const reportSummaryFilterSchema = z.object({
-  project_id: z.coerce.number(),
+const ReportSummaryFilterSchema = z.object({
+  project_id: z.coerce.number<number>(),
   from_date: z.coerce.date<Date>(),
   to_date: z.coerce.date<Date>(),
 })
+
+export type ReportSummaryFilterValueType = z.infer<typeof ReportSummaryFilterSchema>
 
 const ReportView = () => {
   const navigate = useNavigate()
@@ -29,13 +31,11 @@ const ReportView = () => {
   const {
     register,
     formState: { errors },
-    reset,
-    control,
     handleSubmit,
-  } = useForm({
-    resolver: zodResolver(reportSummaryFilterSchema),
+  } = useForm<ReportSummaryFilterValueType>({
+    resolver: zodResolver(ReportSummaryFilterSchema),
     defaultValues: {
-      projectId: null,
+      project_id: null,
       from_date: new Date(),
       to_date: new Date(),
     },

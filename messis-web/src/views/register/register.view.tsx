@@ -1,7 +1,6 @@
 import { type SubmitHandler, useForm, useWatch} from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import {useNavigate} from "react-router";
-import {useFormState} from "react-dom";
 import InputTextField from "../../components/form/inputtext.field.tsx";
 import InputText from "../../components/form/inputtext.element.tsx";
 import {registerSchema, type RegisterFormValue} from "../../commons/types.ts";
@@ -38,7 +37,7 @@ const Register = () => {
         message: "Wrong email or password",
       })
     },
-    onSuccess: (data) => {
+    onSuccess: () => {
       toast("Register success, Please login")
       navigate("/")
     },

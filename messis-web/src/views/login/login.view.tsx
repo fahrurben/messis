@@ -4,10 +4,9 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
 import InputTextField from "../../components/form/inputtext.field"
 import { useLogin } from "./use-login.hook.ts"
-import { actions as authActions, store as authStore} from "../../stores/auth.store.ts"
+import { actions as authActions } from "../../stores/auth.store.ts"
 import type { LoginResponse } from "../../commons/types.ts"
 import { useNavigate } from "react-router"
-import {useSnapshot} from "valtio/react";
 import {useEffect} from "react";
 
 const formSchema = z.object({
