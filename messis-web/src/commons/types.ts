@@ -132,9 +132,19 @@ export type TimeEntryDataType = {
   task: TaskType
 }
 
+export type TimeEntrySummaryDataType = {
+  id: number
+  entry_at: Date
+  task_id: number
+  task__name: string
+  total_seconds: number
+  total_seconds_to_time: string
+  total_time: string
+}
+
 export type ReportSummaryType = {
   user_details: UserProfile
-  entries: TimeEntryDataType[]
+  entries: TimeEntrySummaryDataType[]
   total_time_summary: string
 }
 

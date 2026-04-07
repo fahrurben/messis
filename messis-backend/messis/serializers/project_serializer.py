@@ -3,7 +3,7 @@ from messis.models import Project, ProjectTeam, Task
 
 
 class TaskSerializer(serializers.ModelSerializer[Task]):
-    id = serializers.IntegerField(required=False)
+    id = serializers.IntegerField(required=False,allow_null=True)
     name = serializers.CharField(max_length=255)
     is_billable = serializers.BooleanField()
 

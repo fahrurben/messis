@@ -27,7 +27,7 @@ class ReportView(viewsets.ViewSet):
             time_entry_filters = Q(
                 Q(team_id=user.id) & Q(project_id=project_id) & Q(entry_at__gte=from_date) & Q(entry_at__lte=to_date))
 
-            entries = (TimeEntry.objects.values('entry_at', 'task_id', 'task__name')
+            entries = (TimeEntry.objects.values('id', 'entry_at', 'task_id', 'task__name')
                        .annotate(total_seconds=Sum('total_seconds')).filter(time_entry_filters))
 
             total_seconds_summary = 0

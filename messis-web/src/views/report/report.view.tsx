@@ -35,7 +35,6 @@ const ReportView = () => {
   } = useForm<ReportSummaryFilterValueType>({
     resolver: zodResolver(ReportSummaryFilterSchema),
     defaultValues: {
-      project_id: null,
       from_date: new Date(),
       to_date: new Date(),
     },
@@ -163,7 +162,7 @@ const ReportView = () => {
                       data.entries.map((entry) => {
                         return (
                           <tr key={entry.id}>
-                            <td>{entry.entry_at}</td>
+                            <td>{entry.entry_at.toString()}</td>
                             <td>{entry.task__name}</td>
                             <td align="center">{entry.total_time}</td>
                           </tr>
